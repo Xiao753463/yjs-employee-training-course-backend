@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="emp_auth_index">人員與權限管理</a></li>
+                        <li class="breadcrumb-item"><a href="auth_index">帳號與權限管理</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">使用者身份管理</li>
+                    </ol>
+                </nav>
+                <p class="fs-2 fw-bold">使用者身份管理</p>
+                <div class="input-group justify-content-end">
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="search" id="form1" class="form-control" />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="container mt-5">
+                    <table id="userTable" class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th scope="col">員工編號</th>
+                                <th scope="col">員工姓名</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="modal fade" id="roleEditModal" tabindex="-1" aria-labelledby="identityModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="identityModalLabel">使用者身份編輯</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <h6>身份名稱：</h6>
+                              <div class="input-group align-self-center align-items-center">
+                                <h6 class="pe-4 my-auto">搜尋身份：</h6>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <input id="ser_input" type="text" class="form-control">
+                                        <button type="button" onclick="searchRoles(this)" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                        </ul>
+                                    </div>
+                                </div>
+                              </div>
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">
+                                      <input type="checkbox" id="selectAllMembers">
+                                    </th>
+                                    <th scope="col">身份名稱</th>
+                                    <th scope="col">開始日期</th>
+                                    <th scope="col">結束日期</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                              <button type="button" class="btn btn-warning" onclick="saveUser()">儲存</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" style="height: 6vh;" class="btn btn-danger rounded-4 px-4 fs-6 py-0 fw-bold">
+                        批次刪除
+                    </button>
+                    <p id="updateTime" class="text-right ms-auto">最後更新時間</p>
+                </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var modalFrom;
+    var selectedRoles = [];
+
+    const getUserRoleList = async () => {
+        const response = await fetch('http://localhost:3001/api/emp-roles', {
+            method: 'GET',
+        });
+        
+        const data = await response.json();
+        return data;
+    };
+
+    const getRolesList = async () => {
+        const response = await fetch('http://localhost:3001/api/roles', {
+            method: 'GET',
+        });
+        
+        const data = await response.json();
+        return data;
+    };
+
+    $(document).ready(function () {
+        getUserRoleList().then((data) =>{
+            updateTime();
+            var roles = data.emps;
+            roles.forEach(element => {
+                let EMP_ID = element.emp_id;
+                let EMP_NAME = element.emp_data.emp_name;
+                let EMP_ROLES = element.emp_roles;
+                addUserTr(EMP_ID, EMP_NAME, EMP_ROLES);
+            });
+        });
+    });
+
+    function addUserTr(empId, empName, empRoles){
+        var userTr = $(`<tr></tr>`)
+        userTr.append(`<td><input type="checkbox" id="item_${empId}"></td>`)
+        userTr.append(`<td>${empId}</td>`);
+        userTr.append(`<td>${empName}</td>`);
+
+        // 操作按鈕-身份
+        var editBtn = $('<button type="button" class="my-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleEditModal">選擇身份及時限</button>').on('click', ()=>{
+            $('#roleEditModal').find('.modal-body > h6')('使用者：' + empName);
+            $('#roleEditModal').find('tbody').empty();
+            modalFrom = empId;
+            selectedRoles = [];
+            selectedRoles.push(...empRoles);
+            empRoles.forEach((element) => addRoleTr(element));
+        });
+        // 操作按鈕-刪除
+        var deleteBtn = $('<button type="button" class="my-1 mx-1 btn btn-danger">刪除</button>').on('click', ()=>{
+            modalFrom = empId;
+        });
+
+        var buttonTd = $('<td></td>');
+        buttonTd.append(editBtn);
+        buttonTd.append(deleteBtn);
+        userTr.append(buttonTd);
+        $('#userTable').find('tbody').append(userTr);
+    }
+
+    function addRoleTr(data) {
+        let ROLE_ID = data.role_id;
+        let ROLE_NAME = data.role_name;
+        let ROLE_STARTDATE = data.role_startDate;
+        let ROLE_ENDDATE = data.role_endDate;
+        var perTr = $(`<tr id="role_${ROLE_ID}"></tr>`);
+        perTr.append(`<td><input type="checkbox"></td>`);
+        perTr.append(`<td>${ROLE_NAME}</td>`);
+        perTr.append(`<td><div class="cs-form"><input id=startDate_${ROLE_ID} value="${ROLE_STARTDATE}" type="date" class="form-control"/></div></td>`);
+        perTr.append(`<td><div class="cs-form"><input id=endDate_${ROLE_ID} value="${ROLE_ENDDATE}" type="date" class="form-control"/></div></td>`);
+        $('#roleEditModal').find('tbody').append(perTr);
+    }
+
+    function searchRoles(btn) { 
+        $(btn).parent().find('ul').empty();
+        getRolesList().then((data) =>{
+            updateTime();
+            var roles = data.roles;
+            var searchInput = $('#ser_input').val();
+
+            roles.forEach(element => {
+                let ROLE_ID = element.role_id;
+                let ROLE_NAME = element.role_name;
+                let ROLE_STARTDATE = data.role_startDate;
+                let ROLE_ENDDATE = data.role_endDate;
+                var isExist = selectedRoles.findIndex(function (role) {
+                    return role.role_id == ROLE_ID;
+                });
+                if(isExist == -1){
+                    var roleItem = $(`<li class="dropdown-item">${ROLE_NAME}</li>`).on('click', function (){
+                        ROLE_STARTDATE = getCurrentDate();
+                        ROLE_ENDDATE = getCurrentDate();
+                        addRoleTr(element);
+                        selectedRoles.push(element);
+                    });
+                    $(btn).parent().find('ul').append(roleItem);
+                }
+            });
+        });
+     }
+
+    function saveUser(){
+        var ids = $('#roleEditModal tbody tr').map(function() {
+            return this.id;
+        }).get();
+        var roles = [];
+
+        ids.forEach((element) =>{
+            var id = element.split('_')[1];
+            var startDate = $(`#startDate_${id}`).val();
+            var endDate = $(`#endDate_${id}`).val();
+            roles.push(
+                {
+                    "rold_id": id,
+                    "role_startDate": startDate,
+                    "role_endDate": endDate
+                }
+                );
+        });
+
+        var resultObject = {
+            "emp_id": modalFrom,
+            "emp_roles": roles
+            };
+
+        updateTime();
+        var resultJson = JSON.stringify(resultObject, null, 2);
+        console.log(resultJson);
+    }
+
+    function updateTime() {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            var day = ('0' + currentDate.getDate()).slice(-2);
+            var hours = ('0' + currentDate.getHours()).slice(-2);
+            var minutes = ('0' + currentDate.getMinutes()).slice(-2);
+            var seconds = ('0' + currentDate.getSeconds()).slice(-2);
+
+
+            var formattedDate = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+            $('#updateTime')("最後更新時間 ： " + formattedDate);
+        }
+
+    function getCurrentDate() {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            var day = ('0' + currentDate.getDate()).slice(-2);
+
+            var formattedDate = year + '-' + month + '-' + day;
+            return formattedDate;
+        }
+</script>

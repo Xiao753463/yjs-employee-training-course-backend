@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Lecturer Assignment</title>
+</head>
+
+<body>
+    <h1>Update Lecturer Assignment</h1>
+    <label for="name">File name:</label>
+    <input type="text" id="name" name="name">
+    <br>
+    <label for="cid">Course ID:</label>
+    <input type="text" id="cid" name="cid">
+    <br>
+    <button onclick="downloadFile()">Update</button>
+
+    <script>
+        function downloadFile() {
+            var cid = document.getElementById('cid').value;
+            var name = document.getElementById('name').value;
+            var data = {
+                name: name,
+            };
+
+            // 使用 URLSearchParams 將數據轉換為 URL 查詢字符串
+            var queryString = new URLSearchParams(data).toString();
+            var downloadLink = document.createElement('a');
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            fetch(`/api/download/${cid}?${queryString}`, {
+                method: 'GET',
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    var url = window.URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    downloadLink.download = name;
+                    downloadLink.click();
+                    // 释放 URL 对象
+                    window.URL.revokeObjectURL(url);
+                })
+        }
+    </script>
+</body>
+
+</html>

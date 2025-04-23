@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# VSCode
+.vscode/
+
+# Environments
+.env
+.venv/
+env/
+venv/
+
+# Flask instance folders
+instance/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Mac / Linux / Windows
+.DS_Store
+Thumbs.db
+
+# Pycharm
+.idea/
+
+# Others
+*.bak
+*.swp

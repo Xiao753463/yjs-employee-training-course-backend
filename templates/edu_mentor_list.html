@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+      $(function(){
+
+          $("#topbar").load("topbar"); 
+          $("#sidebar").load("sidebar");
+
+      });
+
+    </script>
+
+</head>
+
+<body>
+
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left:20%">
+
+            <div class="main" style="margin-top: 70px;">
+                <!-- main code here -->
+                <div class="row">
+                  <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                      <li class="breadcrumb-item"><a href="edu_plan_index">教育訓練管理</a></li>
+                      <li class="breadcrumb-item"><a href="edu_index">課程管理</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">指導員管理</li>
+                    </ol>
+                  </nav>
+                </div>
+                <div class="row">
+                  <div class="col-auto">
+                    <h2 class="px-0" style="font-weight: bold;">指導員管理</h2>
+                  </div>
+                  <div class="col">
+                    <button type="button" class="btn btn-info"
+                      style="position: absolute; top: 115px; right: 10px; text-align: center; height: 40px;" data-bs-toggle="modal" data-bs-target="#addInstructor">
+                      新增指導員
+                    </button>   
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <input class="form-control form-control-sm" type="text"  style="position: absolute; right: 10px; width: 250px;">
+                    <i class="fa fa-search"  style="position: absolute; right: 10px;"></i>  
+                  </div>
+                </div>
+                <br>
+                <!-- 自動關閉的對話框 -->
+                <div class="modal fade" id="autoClosingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="alertContent"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 確認刪除的對話框 -->
+                <div class="modal fade" id="askDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">確認是否刪除</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteInstructor()">刪除</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 新增指導員對話框 -->
+                <div class="modal" id="addInstructor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="addInstructorTitle">指導員新增</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="modalForm">
+                          <div class="row">
+                            <div class="col-auto"><b>指導員：</b></div>
+                            <div class="col">
+                              <select class="form-select" id="addInstructorSelect" name="instructorName" style="width: 100px;">
+                                <option></option>
+                              </select>
+                            </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-auto">
+                              <b>課程名稱：</b>
+                            </div>
+                            <div class="col-auto">
+                              <input class="form-control form-control-sm" type="text" id="addInstructorName" name="name" style="width: 100px;" placeholder="">
+                            </div>
+                            <div class="col-auto"><b>課程人數：</b></div>
+                            <div class="col-auto">
+                              <input class="form-control form-control-sm" type="number" id="addInstructorNumber" name="number" style="width: 100px;" value="" min="0" max="999">
+                            </div>
+                            <div class="col-auto">人</div>
+                            <div class="col-auto"><b>評價：</b></div>
+                            <div class="col-auto">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="addInlineRadio1" value="1">
+                                <label class="form-check-label" for="addInlineRadio1">1</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="addInlineRadio2" value="2">
+                                <label class="form-check-label" for="addInlineRadio2">2</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="addInlineRadio3" value="3">
+                                <label class="form-check-label" for="addInlineRadio3">3</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="addInlineRadio4" value="4">
+                                <label class="form-check-label" for="addInlineRadio4">4</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="addInlineRadio5" value="5">
+                                <label class="form-check-label" for="addInlineRadio5">5</label>
+                              </div>
+                            </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-auto"><b>課程日期：</b></div>
+                            <div class="col-2">
+                              <input type="date" class="form-control" id="addDateStart" name="startDate">
+                            </div>
+                            <div class="col-auto">~</div>
+                            <div class="col-2">
+                              <input type="date" class="form-control" id="addDateEnd" name="endDate">
+                            </div>
+                            <div class="col-auto"><b>課程時間：</b></div>
+                            <div class="col-2">
+                              <input type="time" class="form-control" id="addTimeStart" name="startTime"/>
+                            </div>
+                            <div class="col-auto">~</div>
+                            <div class="col-2">
+                              <input type="time" class="form-control" id="addTimeEnd" name="endTime"/>
+                            </div>
+                          </div>
+                        </form>  
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="addInstructor()">新增</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 編輯指導員對話框 -->
+                <div class="modal" id="editInstructor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editInstructorTitle">指導員編輯</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeEdit()"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="editModalForm">
+                          <div class="row">
+                            <div class="col-auto"><b>指導員：</b></div>
+                            <div class="col">
+                              <select class="form-select" id="editInstructorSelect" name="instructorName" style="width: 100px;">
+                                <option></option>
+                              </select>
+                            </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-auto"><b>課程名稱：</b></div>
+                            <div class="col-auto">
+                              <input class="form-control form-control-sm" type="text" id="editInstructorName" name="name" style="width: 100px;">
+                            </div>
+                            <div class="col-auto"><b>課程人數：</b></div>
+                            <div class="col-auto">
+                              <input class="form-control form-control-sm" type="number" id="editInstructorNumber" name="number" style="width: 100px;" value="" min="0" max="999">
+                            </div>
+                            <div class="col-auto">人</div>
+                            <div class="col-auto"><b>評價：</b></div>
+                            <div class="col-auto">
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="editInlineRadio1" value="1">
+                                <label class="form-check-label" for="editInlineRadio1">1</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="editInlineRadio2" value="2">
+                                <label class="form-check-label" for="editInlineRadio2">2</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="editInlineRadio3" value="3">
+                                <label class="form-check-label" for="editInlineRadio3">3</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="editInlineRadio4" value="4">
+                                <label class="form-check-label" for="editInlineRadio4">4</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="star" id="editInlineRadio5" value="5">
+                                <label class="form-check-label" for="editInlineRadio5">5</label>
+                              </div>
+                            </div>
+                          </div>
+                          <br>
+                          <div class="row">
+                            <div class="col-auto"><b>課程日期：</b></div>
+                            <div class="col-2">
+                              <input type="date" class="form-control" id="editDateStart" name="startDate">
+                            </div>
+                            <div class="col-auto">~</div>
+                            <div class="col-2">
+                              <input type="date" class="form-control" id="editDateEnd" name="endDate">
+                            </div>
+                            <div class="col-auto"><b>課程時間：</b></div>
+                            <div class="col-2">
+                              <input type="time" class="form-control" id="editTimeStart" name="startTime"/>
+                            </div>
+                            <div class="col-auto">~</div>
+                            <div class="col-2">
+                              <input type="time" class="form-control" id="editTimeEnd" name="endTime"/>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeEdit()">取消</button>
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="storeInstructor()">儲存</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <table class="table" id="instructorTable">
+                    <thead>
+                      <tr>
+                        <th scope="col"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></th>
+                        <th scope="col">指導員姓名</th>
+                        <th scope="col">授課名稱</th>
+                        <th scope="col">授課日期</th>
+                        <th scope="col">授課時間</th>
+                        <th scope="col">課程人數</th>
+                        <th scope="col">評價</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <!-- <div class="col-7">
+                    <button type="button" class="btn btn-danger" style="position: absolute;"  data-bs-toggle="modal" data-bs-target="#askDeleteModal"> 批次刪除 </button>
+                  </div> -->
+                  <div class="col-auto" style="position: absolute; right: 150px;">
+                    最後更新時間：
+                  </div>
+                  <div class="col-auto" id="timeNow" style="position: absolute; right: 0px;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+
+  <!-- js start -->
+  <script type="text/javascript">
+
+    // 指導員所有資料
+    var data = [
+      { inputId: 'C001', instructorName: '陳OO', name: '課程一', startDate: '2024/2/1', endDate: '2024/2/5', startTime: '15:00', endTime: '17:00', number: 30, star: 5, button1Id: 'C001', button2Id: 'C001'},
+      { inputId: 'C002', instructorName: '林OO', name: '課程二', startDate: '2024/2/2', endDate: '2024/2/7', startTime: '14:00', endTime: '18:00', number: 20, star: 4, button1Id: 'C002', button2Id: 'C002'}
+    ];
+  
+    // 要刪除的指導員
+    var deleteData;
+    // 全部資料的 API
+    var apiUrl = '';
+  
+    // 獲取指導員資訊
+    function getData (url) {
+      
+      var table = document.getElementById('instructorTable');
+      var tbody = table.getElementsByTagName('tbody')[0];
+      // 處理 GET 請求
+      fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            // 清空列表
+            tbody.innerHTML = '';
+            instructorList(data);
+          })
+          .catch(error => {
+            tbody.innerHTML = '';
+            console.error('Error fetching API data:', error);
+            instructorList(data);
+          });
+      showTime();
+    }
+  
+    // 顯示時間
+    function showTime () {
+      // 選擇元素
+      var currentTimeElement = document.getElementById("timeNow");
+  
+      // 獲取當前時間
+      var currentTime = new Date();
+  
+      // 格式化日期
+      var year = currentTime.getFullYear();
+      var month = currentTime.getMonth() + 1; // 月份是從0開始的，所以要加1
+      var day = currentTime.getDate();
+  
+      // 格式化時間
+      var hours = currentTime.getHours();
+      var minutes = currentTime.getMinutes();
+      var seconds = currentTime.getSeconds();
+  
+      // 如果是個位數在前面加上0
+      if (hours < 10) {
+        hours = "0" + hours
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds
+      }
+  
+      // 顯示在元素中
+      currentTimeElement.textContent = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
+    }
+  
+    // 指導員列表讀取
+    function instructorList(data) {
+  
+      // 獲取表格與表格體元素
+      var table = document.getElementById('instructorTable');
+      var tbody = table.getElementsByTagName('tbody')[0];
+  
+      // 填充数据到表格
+      data.forEach(function(item) {
+        var row = tbody.insertRow();
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        var cell2 = row.insertCell(2);
+        var cell3 = row.insertCell(3);
+        var cell4 = row.insertCell(4);
+        var cell5 = row.insertCell(5);
+        var cell6 = row.insertCell(6);
+        var cell7 = row.insertCell(7);
+        var cell8 = row.insertCell(8);
+  
+        // 創建輸入框並設置唯一ID和class
+        var input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'form-check-input';
+        input.id = item.inputId;
+        // 將按鈕添加到單元格
+        cell0.appendChild(input);
+  
+        cell1.textContent = item.instructorName;
+        cell2.textContent = item.name;
+        cell3.textContent = item.startDate + '~' + item.endDate;
+        cell4.textContent = item.startTime + '~' + item.endTime;
+        cell5.textContent = item.number;
+  
+        // 创建包含 Font Awesome 图标的 <i> 元素
+        var step;
+        for (step = 0; step < item.star; step++) {
+          var icon = document.createElement('i');
+          icon.className = 'fa-solid fa-star';
+          cell6.appendChild(icon);
+        }
+        
+        // 創建按鈕並設置唯一ID和class
+        var button1 = document.createElement('button');
+        button1.textContent = '編輯';
+        button1.id = item.button1Id;
+        button1.className = 'btn btn-warning';
+        button1.setAttribute('data-bs-toggle', 'modal');
+        button1.setAttribute('data-bs-target', '#editInstructor');
+        button1.addEventListener('click', function() {
+          openEdit(item);
+        });
+        // 將按鈕添加到單元格
+        cell7.appendChild(button1);
+  
+        // 創建按鈕並設置唯一ID和class
+        var button2 = document.createElement('button');
+        button2.textContent = '刪除';
+        button2.id = item.button2Id;
+        button2.className = 'btn btn-danger';
+        button2.setAttribute('data-bs-toggle', 'modal');
+        button2.setAttribute('data-bs-target', '#askDeleteModal');
+        button2.addEventListener('click', function() {
+          getDeleteData(item);
+        });
+        // 將按鈕添加到單元格
+        cell8.appendChild(button2);
+      });
+    }
+  
+    // 打開編輯對話框
+    function openEdit (item) {
+  
+      // 獲取對話框元素
+      var modal = new bootstrap.Modal(document.getElementById('editInstructor'));
+  
+      var instructorNames = ['陳OO', '林OO'];
+      var selectInstructor = document.getElementById('editInstructorSelect');
+      // 清空選擇框中的所有選項
+      selectInstructor.innerHTML = '';
+      // 創建新的選項
+      var option1 = document.createElement('option');
+      option1.value = item.instructorName;
+      option1.text = item.instructorName;
+      selectInstructor.add(option1);
+      instructorNames.forEach(function(element) {
+        if (element != item.instructorName) {
+          var option = document.createElement('option');
+          option.value = element;
+          option.text = element;
+          selectInstructor.add(option);
+        }
+      });
+  
+      // 獲取輸入元素
+      var inputInstructorName = document.getElementById('editInstructorName');
+      // 設置輸入元素的值
+      inputInstructorName.value = item.name;
+  
+      var inputInstructorNumber = document.getElementById('editInstructorNumber');
+      inputInstructorNumber.value = item.number;
+  
+      switch (item.star) {
+        case 1:
+          var radioOption = document.getElementById('editInlineRadio1');
+          radioOption.checked = true;
+          break;
+        case 2:
+          var radioOption = document.getElementById('editInlineRadio2');
+          radioOption.checked = true;
+          break;
+        case 3:
+          var radioOption = document.getElementById('editInlineRadio3');
+          radioOption.checked = true;
+          break;
+        case 4:
+          var radioOption = document.getElementById('editInlineRadio4');
+          radioOption.checked = true;
+          break;
+        case 5:
+          var radioOption = document.getElementById('editInlineRadio5');
+          radioOption.checked = true;
+          break;
+        default:
+          var radioOption = document.getElementById('editInlineRadio1');
+          radioOption.checked = true;
+      }
+  
+      // 將原始日期字符串轉換成 Date 對象
+      var originalDate = new Date(item.startDate);
+      // 獲取年、月、日的值
+      var year = originalDate.getFullYear();
+      var month = (originalDate.getMonth() + 1).toString().padStart(2, '0'); // 月份需要補零
+      var day = originalDate.getDate().toString().padStart(2, '0'); // 日需要補零
+      // 構建新的日期字符串
+      var finalStartDate = year + "-" + month + "-" + day;
+      var dateInput = document.getElementById('editDateStart');
+      dateInput.value = finalStartDate;
+  
+      // 將原始日期字符串轉換成 Date 對象
+      var originalDate = new Date(item.endDate);
+      // 獲取年、月、日的值
+      var year = originalDate.getFullYear();
+      var month = (originalDate.getMonth() + 1).toString().padStart(2, '0'); // 月份需要補零
+      var day = originalDate.getDate().toString().padStart(2, '0'); // 日需要補零
+      // 構建新的日期字符串
+      var finalEndDate = year + "-" + month + "-" + day;
+      var dateInput = document.getElementById('editDateEnd');
+      dateInput.value = finalEndDate;
+  
+      var timeStart = document.getElementById('editTimeStart');
+      timeStart.value = item.startTime;
+  
+      var timeEnd = document.getElementById('editTimeEnd');
+      timeEnd.value = item.endTime;
+    }
+  
+    function closeEdit() {
+      var modalBackdrops = document.querySelectorAll('.modal-backdrop');
+  
+      // 遍歷所有找到的元素
+      modalBackdrops.forEach(function(backdrop) {
+        // 處理每個 .modal-backdrop 元素
+        backdrop.style.display = 'none';
+      });
+    }
+  
+    // 儲存編輯對話框
+    function storeInstructor () {
+      // 獲取 Modal 中的表單元素
+      var modalForm = document.getElementById('editModalForm');
+  
+      // 獲取表單資訊
+      var formData = new FormData(modalForm);
+  
+      // 轉換為 JSON 對象
+      var jsonObject = {};
+      formData.forEach(function (value, key) {
+        if (key == 'number' || key == 'star') {
+          value = parseInt(value, 10);
+        }
+        jsonObject[key] = value;
+      });
+  
+      // 將 JSON 對象轉換為 JSON 字符串
+      var jsonString = JSON.stringify(jsonObject);
+  
+      console.log('storeInstructor: ' + jsonString);
+  
+      var url = '';
+      // 處理 POST 請求
+      fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonString,
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Post request response:', data);
+            showAlert('儲存成功');
+          })
+          .catch(error => {
+            console.error('Error making POST request:', error);
+            showAlert('儲存失敗');
+          });
+      closeEdit();
+      getData(apiUrl);
+    }
+  
+    // 新增指導員
+    function addInstructor () {
+      // 獲取 Modal 中的表單元素
+      var modalForm = document.getElementById('modalForm');
+  
+      // 獲取表單資訊
+      var formData = new FormData(modalForm);
+  
+      // 轉換為 JSON 對象
+      var jsonObject = {};
+      formData.forEach(function (value, key) {
+        if (key == 'number' || key == 'star') {
+          value = parseInt(value, 10);
+        }
+        jsonObject[key] = value;
+      });
+  
+      // 將 JSON 對象轉換為 JSON 字符串
+      var jsonString = JSON.stringify(jsonObject);
+  
+      console.log('addInstructor: ' + jsonString);
+  
+      var url = '';
+      // 處理 POST 請求
+      fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonString,
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Post request response:', data);
+            showAlert('新增成功');
+          })
+          .catch(error => {
+            console.error('Error making POST request:', error);
+            showAlert('新增失敗');
+          });
+      getData(apiUrl);
+    }
+  
+    // 接收刪除課程資料
+    function getDeleteData (item) {
+      deleteData = item;
+    }
+  
+    // 刪除指導員
+    function deleteInstructor () {
+      if (deleteData) {
+        var url = '';
+        fetch(url, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // 處理刪除成功的邏輯
+            console.log('Delete request response:', data);
+            showAlert('刪除成功');
+          })
+          .catch(error => {
+            console.error('Error deleting data:', error);
+            showAlert('刪除失敗');
+          });
+        getData(apiUrl);
+      } else {
+        showAlert('刪除失敗');
+      }
+    }
+  
+    // 顯示 alert
+    function showAlert(msg) {
+  
+      var content = document.getElementById('alertContent');
+      content.textContent = msg;
+      var autoClosingDialog = new bootstrap.Modal(document.getElementById('autoClosingModal'), {
+        backdrop: 'static', // 防止用戶點擊背景關閉
+        keyboard: false // 防止用戶點擊ESC關閉
+      });
+  
+      autoClosingDialog.show();
+  
+      // 使用 setTimeout 設置一定時間後自動關閉
+      setTimeout(function() {
+        autoClosingDialog.hide();
+      }, 3000); // 3 秒後自動關閉
+    }
+  
+    // 搜尋框發 API
+    function searchData () {
+      // 搜尋特定資料的 API
+      var url = '';
+      // 獲取輸入框和顯示訊息的引用
+      var myInput = document.getElementById('search');
+  
+      // 監控輸入框的 input 事件
+      myInput.addEventListener('input', function() {
+        // 獲取输入框的值
+        var inputValue = myInput.value;
+        // 發送 API
+        getData(url);
+        console.log('searchData: ' + inputValue);
+      });
+    }
+  
+    getData(apiUrl);
+    searchData();
+  </script>
+  <!-- js end -->
+
+</body>
+
+</html>

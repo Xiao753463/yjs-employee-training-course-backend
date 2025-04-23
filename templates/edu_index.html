@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+
+</head>
+<body>
+    <div class="container-fluid m-0">
+        
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="edu_plan_index">教育訓練管理</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">課程管理</li>
+                    </ol>
+                </nav>
+               <div class="container p-0 m-0 d-flex flex-wrap gap-3">
+                    <a href="edu_course_list">
+                        <button type="button" style="width: 25vw;" class="btn btn-secondary rounded-4 px-3 py-2 fs-5 fw-bold">
+                            課程管理
+                        </button>
+                    </a>
+                    <a href="edu_instructor_list">
+                        <button type="button" style="width: 25vw;" class="btn btn-secondary rounded-4 px-3 py-2 fs-5 fw-bold">
+                            講師管理
+                        </button>
+                    </a>
+                    <a href="edu_mentor_list">
+                        <button type="button" style="width: 25vw;" class="btn btn-secondary rounded-4 px-3 py-2 fs-5 fw-bold">
+                            指導員管理
+                        </button>
+                    </a>
+                    <a href="#">
+                        <button type="button" style="width: 25vw;" class="btn btn-secondary rounded-4 px-3 py-2 fs-5 fw-bold">
+                            個人課程管理
+                        </button>
+                    </a>
+               </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+</html>
+<!-- <script type="text/javascript">
+    // 輔助函數：向下拉菜單添加選項
+    function addOption(dropdown, value, text) {
+        var option = document.createElement('option');
+        option.value = value;
+        option.text = text;
+        dropdown.add(option);
+    }
+
+    // 通过 JavaScript 讀取 Cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // 發送 AJAX 請求獲取登入訊息
+    function fetchLoginInfo() {
+        const sessionId = getCookie('session_id');
+
+        // 如果有會話標示浮，發送請求
+        if (sessionId) {
+        fetch('/get-login-info', {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${sessionId}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Login Info:', data);
+            // 在這裏處理獲取到的登入訊息
+        })
+        .catch(error => console.error('Error:', error));
+        } else {
+        // 跳轉頁面
+        // window.location.assign('login');
+        console.log('User not logged in');
+        }
+    }
+
+    // 調用函數獲取登入訊息
+    fetchLoginInfo();
+</script> -->

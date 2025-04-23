@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const emp_code = document.getElementById('emp_code');
+            emp_code.value = localStorage.getItem('emp_code');
+            postdata();
+        })
+        function postdata() {
+            const code = localStorage.getItem('emp_code');
+            const url = new URL('http://localhost:3000/emp_static_update');
+            url.searchParams.append('emp_code', code);
+            // Perform the fetch request with the updated URL
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    emp_code: code
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                renderEmpolyInfo(data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        function renderEmpolyInfo(data) {
+            const emp_code = document.getElementById('emp_code');
+            emp_code.value = data.emp_code;
+            const departmentSelect = document.getElementById('Department');
+            // Loop through options to find the one with the matching value
+            for (let i = 0; i < departmentSelect.options.length; i++) {
+                if (departmentSelect.options[i].text === data.department_name) {
+                    departmentSelect.options[i].selected = true;
+                    break; // Once we find the matching option, we can stop the loop
+                }
+            }
+            const positionSelect = document.getElementById('Position');
+            // Loop through options to find the one with the matching value
+            for (let i = 0; i < positionSelect.options.length; i++) {
+                if (positionSelect.options[i].text === data.position) {
+                    positionSelect.options[i].selected = true;
+                    break; // Once we find the matching option, we can stop the loop
+                }
+            }
+            document.getElementById('Name').value = data.emp_name;
+        
+            // Gender radio buttons
+            const genderRadios = document.getElementsByName('Gender');
+            if (data.gender === "Male") {
+                genderRadios[0].checked = true;
+            } else {
+                genderRadios[1].checked = true;
+            }
+        
+            document.getElementById('Address').value = data.address;
+            document.getElementById('Brithday').value = data.birth;
+            document.getElementById('Phone').value = data.phone;
+            document.getElementById('Mobile').value = data.mobilephone;
+        
+            // Account Enabled checkbox
+            document.getElementById('Enabled').checked = data.account_enabled;
+        
+            document.getElementById('Email').value = data.email;
+        }
+       
+
+    </script>
+
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+            <!-- <div class="col-10"
+                style="height:110vh;box-shadow: 5px 0px 5px #ccc;">
+                <div class="row mt-3"> -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                          <li class="breadcrumb-item"><a href="emp_auth_index">人員與權限管理</a></li>
+                          <li class="breadcrumb-item"><a href="emp_index">人員管理</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">員工基本資料</li>
+                        </ol>
+                    </nav>
+                </div>
+                 <div class="row">
+                    <div class="col">
+                        <h3 style="display: inline;">員工資本資料-員工詳細資料</h3>
+                    </div>
+                    <!-- last_update_time -->
+                    <div class="col align-self-end">
+                        <!-- 更新時間 -->
+                        <p class="text-end" id="last_update_time">最後更新時間:2024/1/8 12:18:18</p>
+                    </div>
+                </div>
+                <!-- title end -->
+                <!-- 資料表生成開始 -->
+                <div class="row mx-1 my-1 border rounded">
+                    <!-- 基本資料 -->
+                    <div class="row g-1">
+                        <div class="col-auto me-auto ms-2">
+                            <p class="text-start" style="color: gray;">基本資料</p>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                員工動態屬性
+                            </button>  
+                            <button type="button" class="btn btn-warning" onclick="postdata()">儲存</button>    
+                        </div>
+                    </div>
+                    <div class="row g-0">
+                         <!-- 員工編號 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="emp_code" class="col-form-label" style="font-size: 1.2rem;">員工編號：</label>
+                                </div>
+                                <div class="col-7">
+                                    <input type="text" class="form-control h-100" id="emp_code" placeholder="員工編號" aria-label="員工編號">
+                                </div>
+                            </div>
+                        </div>
+                         <!--部門-->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="Department" class="col-form-label" style="font-size: 1.2rem;">部門：</label>
+                                </div>
+                                <div class="col-7">
+                                    <select class="form-select h-100 " id="Department" aria-label="Default select example">
+                                        <option selected>部門</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--職務-->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="Position"  class="col-form-label" style="font-size: 1.2rem; ">職務：</label>
+                                </div>
+                                <div class="col-7">
+                                    <select class="form-select" id="Position" aria-label="Default select example">
+                                        <option selected>職務</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="row g-1">
+                         <!-- 姓名 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2" >
+                                    <label for="Name" class="col-form-label" style="font-size: 1.2rem;" >姓名：</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control h-100" id="Name" placeholder="姓名" aria-label="姓名">
+                                </div>
+                            </div>
+                        </div>
+                        <!--性別 -->
+                        <div class="col">
+                            <label class="col-form-label" style="font-size: 1.2rem"; for="Gender">性別：</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="Male" value="Male">
+                                <label class="form-check-label" for="male">男</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="Female" value="Female">
+                                <label class="form-check-label" for="Female">女</label>
+                            </div>
+                        </div>
+                        <!--生日 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="start" class="col-form-label"  style="font-size: 1.2rem">生日：</label>        
+                                </div>
+                                <div class="col-7">
+                                    <input type="date" class="form-control" id="Brithday" name="Brithday">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 地址列 -->
+                    <div class="row mt-2">
+                        <div class="col ms-0 d-flex justify-content-start align-items-start">
+                            <label for="Adress" class="col-form-label me-2" style="font-size: 1.2rem">地址：</label>
+                            <input type="text"  class="form-control w-25" id="City" placeholder="縣市">
+                            <input type="text" class="form-control w-25" id="Address" placeholder="其他">
+                        </div>                                                    
+                    </div>
+                    <!-- 電話列 -->
+                    <div class="row g-1 md-3">
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="Phone" class="col-form-label" style="font-size: 1.2rem">電話：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Phone" placeholder="電話">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 行動電話 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="Mobile" class="col-form-label" style="font-size: 1.2rem">行動電話：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Mobile" placeholder="行動電話" >
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 啟用 -->
+                        <div class="col ">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="Enabled" checked>
+                                <label class="form-check-label" for="Enabled" style="font-size: 1.2rem">啟用</label>
+                            </div>
+                        </div>
+                    <div class="row mt-2">
+                        <!-- email -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto ">
+                                    <label for="Email" class="col-form-label" style="font-size: 1.2rem">E-mail：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Email" placeholder="E-mail" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">註：預設密碼為員工之生日，格式為YYYYMMDD（共8碼）</div>
+                    </div>
+                        <hr>
+                    </div>
+                     <!-- 職務歷程 -->
+                     <div class="row">
+                        <div class="row">
+                            <p class="text-start" style="color: gray;">職務歷程</p>
+                        </div>
+                        <div class="row g-0">
+                            <!-- 日期 -->
+                            <div class="col-auto ms-3">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="PositionDate" class="col-form-label"  style="font-size: 1.2rem">生日：</label>        
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" id="PositionDate" name="PositionDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 職務 -->
+                            <div class="col">
+                                <div class="row g-1">
+                                    <div class="col-auto">
+                                        <label for="pastPosition" class="col-form-label" style="font-size: 1.2rem">職務：</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select class="form-select" id="pastPosition" aria-label="Default select example">
+                                            <option selected></option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 薪資 -->
+                            <div class="col-auto">
+                                <div class="row g-1">
+                                    <div class="col-auto">
+                                        <label for="Salary" class="col-form-label" style="font-size: 1.2rem" >薪資：</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="Salary" aria-label="Dollar amount (with dot and two decimal places)">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div  class="col d-flex justify-content-end mb-3">
+                                <button type="button" class="btn btn-primary" onclick="postPositionHistory()">新增</button>
+                                <button type="button" class="btn btn-danger" onclick="deletePositionHistory()">刪除</button>       
+                            </div>
+                            <hr>
+                        </div>   
+                    </div>
+                    <!-- 績效等級 -->
+                    <div class="row ">
+                        <div class="row">
+                            <p class="text-start" style="color: gray;">職能等級</p>
+                        </div>
+                        <div class="row g-0">
+                             <!-- 日期 -->
+                            <div class="col-auto ms-3">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="Functional_Level_DateLevel_Date" class="col-form-label"  style="font-size: 1.2rem">生日：</label>        
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" id="FunctionalLevel_Date" name="FunctionalLevel_Date">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 教育訓練 -->
+                            <div class="col-auto me">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="EducationTrain"  class="col-form-label me-2" style="font-size: 1.2rem">技術項目：</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="text" class="form-control " placeholder="可成一" id="EducationTrain" aria-label="教育訓練">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 職能評量 -->
+                            <div class="col-auto">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="FunctionalAssessment" class="col-form-label me-2" style="font-size: 1.2rem">職能等級：</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" id="FunctionalAssessment" aria-label="職能評量">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-end mb-2">
+                                <button type="button" class="btn btn-primary" onclick="postFuctionalLevel()">新增</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteFuctionalLevel()">刪除</button>       
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- main code end -->
+             
+             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="EmpDynamic">員工動態屬性</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                     <div class="container-fluid">
+                        <!-- 能力 -->
+                        <div class="row mb-0">
+                            <div class="col-auto">
+                                <label for="Capability" class="col-form-label" style="font-size: 1.1rem;">工作能力：</label>
+                                <label for="Capability_strengthen" class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Capability" id="Capability1" value="1">
+                                    <label class="form-check-label" for="Capability">1</label>
+                                  </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Capability" id="Capability2" value="2">
+                                    <label class="form-check-label" for="Capability">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Capability" id="Capability3" value="3">
+                                    <label class="form-check-label" for="Capability">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Capability" id="Capability4" value="4">
+                                    <label class="form-check-label" for="Capability">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Capability" id="Capability5" value="5">
+                                    <label class="form-check-label" for="Capability">5</label>
+                                </div>
+                                <label for="Capability_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                         <!-- 績效 -->
+                         <div class="row mb-0">
+                            <div class="col">
+                                <label for="Performance"  class="col-form-label" style="font-size: 1.1rem;">績效：</label>
+                                <label for="Performance_Level_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                  </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_3" value="3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_4" value="4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_5" value="5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Performance_Level_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                        <!-- 態度 -->
+                        <div class="row mb-0">
+                            <div class="col">
+                                <label for="Attitude"  class="col-form-label" style="font-size: 1.1rem;">態度：</label>
+                                <label for="Attitude_Level_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_3" value="3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_4" value="4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_5" value="5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Attitude_Level_Excellent" class="col-form-label">優良</label>
+                            </div>                    
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <h5>工作成效</h5>
+                            </div>
+                        </div>
+                         <!-- 工作品質 -->
+                        <div class="row">
+                            <div class="col">
+                                <label for="Work_Quality"  class="col-form-label" style="font-size: 1.1rem;">工作品質：</label>
+                                <label for="Work_Quality_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_3" value="3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_4" value="4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_5" value="5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Work_Quality_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                       <!-- 產出品質 -->
+                        <div class="row">
+                            <div class="col">
+                                <label for="Output_Quality"  class="col-form-label" style="font-size: 1.1rem;">產出品質：</label>
+                                <label for="Output_Quality_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_3" value="Level_3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_4" value="Level_4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_5" value="Level_5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Output_Quality_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                        <!-- 精實 -->
+                        <div class="row">
+                            <div class="col">
+                                <label for="Lean"  class="col-form-label" style="font-size: 1.1rem;">精實：</label>
+                                <label for="Lean_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_3" value="3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_4" value="4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_5" value="5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Lean_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                         <!-- 效率 -->
+                        <div class="row">
+                            <div class="col ">
+                                <label for="Efficiency"  class="col-form-label" style="font-size: 1.1rem;">效率：</label>
+                                <label for="Efficiency_strengthen"  class="col-form-label">待加強</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">1</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">2</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_3" value="3">
+                                    <label class="form-check-label" for="inlineRadio2">3</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_4" value="4">
+                                    <label class="form-check-label" for="inlineRadio2">4</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_5" value="5">
+                                    <label class="form-check-label" for="inlineRadio2">5</label>
+                                </div>
+                                <label for="Efficiency_Excellent" class="col-form-label">優良</label>
+                            </div>
+                        </div>
+                         <!-- 衛生 -->
+                            <div class="row">
+                                <div class="col">
+                                    <label for="Hygiene"  class="col-form-label" style="font-size: 1.1rem;">清潔衛生：</label>
+                                    <label for="Hygiene_strengthen"  class="col-form-label">待加強</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_1" value="1">
+                                        <label class="form-check-label" for="inlineRadio1">1</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_2" value="2">
+                                        <label class="form-check-label" for="inlineRadio2">2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_3" value="3">
+                                        <label class="form-check-label" for="inlineRadio2">3</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_4" value="4">
+                                        <label class="form-check-label" for="inlineRadio2">4</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_5" value="5">
+                                        <label class="form-check-label" for="inlineRadio2">5</label>
+                                    </div>
+                                    <label for="Hygiene_Excellent" class="col-form-label">優良</label>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                      <button type="button" class="btn btn-primary" onclick="postEmpDynamic()">儲存</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</body>
+
+</html>

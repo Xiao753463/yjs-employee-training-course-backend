@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+      $(function(){
+
+          $("#topbar").load("topbar"); 
+          $("#sidebar").load("sidebar");
+
+      });
+
+    </script> 
+
+    <style>
+      .tag-container {
+        display: inline-block;
+        margin-right: 5px;
+      }
+
+      .tag {
+        padding: 5px 10px;
+        background-color: #e0e0e0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .tag-text {
+        margin-right: 5px;
+      }
+
+      .tag-delete {
+        cursor: pointer;
+        color: #f00;
+      }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px; width: 100%;">
+                <!-- main code here -->
+                <div class="row">
+                  <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                      <li class="breadcrumb-item"><a href="edu_plan_index">教育訓練管理</a></li>
+                      <li class="breadcrumb-item"><a href="plan_index">培訓計畫管理</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">課程指派</li>
+                    </ol>
+                  </nav>
+                </div>
+                <div class="row">
+                  <div class="col-auto">
+                    <h2 class="px-0" style="font-weight: bold;">課程指派</h2>
+                  </div>
+                </div>
+                <!-- 自動關閉的對話框 -->
+                <div class="modal fade" id="autoClosingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="alertContent"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <input class="form-control form-control-sm" type="text"  style="position: absolute; right: 10px; width: 250px;">
+                    <i class="fa fa-search"  style="position: absolute; right: 10px;"></i>  
+                  </div>
+                </div>
+                <br>
+                <div class="container-fluid mt-5">
+                  <div class="row">
+                    <div class="col" style="width: 100%;">
+                      <table id="classTable" class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>課程代碼</th>
+                            <th>課程名稱</th>
+                            <th>已選人數/課程人數</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-auto" style="position: absolute; right: 150px;">
+                    最後更新時間：
+                  </div>
+                  <div class="col-auto" id="timeNow" style="position: absolute; right: 0px;"></div>
+                </div>
+                <!-- 課程員工指派對話框 -->
+                <div class="modal" id="employeeAssign" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="employeeAssignTitle">課程員工指派</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeEdit()"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-auto"><b>課程名稱：</b></div>
+                          <div class="col" id="employeeAssignName">
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col-auto"><b>選擇員工：</b></div>
+                          <div class="col">
+                            <select class="form-select" id="employeeAssignSelect" style="width: 100px;">
+                            </select>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col-auto"><b>已選成員：</b></div>
+                          <div class="col-auto" id="chooseMember">
+                          </div>
+                          <div class="col">人</div>
+                        </div>
+                        <br>
+                        <div class="row">
+                          <div class="col" id="employeeSelect"></div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeEdit()">取消</button>
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="storeEmployee()">儲存</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+
+  <!-- js start -->
+  <script type="text/javascript">
+
+    // 全部課程列表資料的 API
+    var apiUrl = 'http://127.0.0.1:5000/api/course';
+    // 原本的員工
+    var ogEmployee = [];
+    // 新增的員工
+    var newEmployee = [];
+    // 刪除的員工
+    var delEmployee = [];
+    // 刪除的課程
+    var id = '';
+  
+    // 獲取課程列表資訊
+    function getData (url) {
+      
+      var table = document.getElementById('classTable');
+      var tbody = table.getElementsByTagName('tbody')[0];
+      // 處理 GET 請求，發出 url 的 api 請求
+      fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            // 清空列表
+            tbody.innerHTML = '';
+            // console.log(data);
+            // 把 data 的資料印在課程列表上
+            classList(data);
+          })
+          .catch(error => {
+            // 把課程列表清空
+            tbody.innerHTML = '';
+            // 發出 API 連接錯誤訊息
+            console.error('Error fetching API data:', error);
+          });
+      // 更改顯示時間
+      showTime();
+    }
+    
+    // 顯示時間
+    function showTime () {
+      // 選擇元素
+      var currentTimeElement = document.getElementById("timeNow");
+  
+      // 獲取當前時間
+      var currentTime = new Date();
+  
+      // 格式化日期
+      var year = currentTime.getFullYear();
+      var month = currentTime.getMonth() + 1; // 月份是從0開始的，所以要加1
+      var day = currentTime.getDate();
+  
+      // 格式化時間
+      var hours = currentTime.getHours();
+      var minutes = currentTime.getMinutes();
+      var seconds = currentTime.getSeconds();
+  
+      // 如果是個位數在前面加上0
+      if (hours < 10) {
+        hours = "0" + hours
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds
+      }
+  
+      // 顯示在元素中
+      currentTimeElement.textContent = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
+    }
+    
+    // 課程列表讀取，把資料印在課程列表上面
+    function classList(data) {
+      // data 是所有資料是從 getData 方法取得
+  
+      // 獲取表格與表格體元素
+      var table = document.getElementById('classTable');
+      var tbody = table.getElementsByTagName('tbody')[0];
+  
+      // 填充數據到表格
+      data.forEach(function(item) {
+        var row = tbody.insertRow();
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        var cell2 = row.insertCell(2);
+        var cell3 = row.insertCell(3);
+  
+  
+        // 將按鈕添加到單元格
+        cell0.textContent = item.id;
+        cell1.textContent = item.name;
+        cell2.textContent = item.enrollment_count + '/' + item.engaged_emp_num;
+  
+        // 創建按鈕並設置唯一ID和class，課程檔案上傳的按鈕
+        var button1 = document.createElement('button');
+        button1.textContent = '選擇員工';
+        button1.className = 'btn btn-info';
+        button1.setAttribute('data-bs-toggle', 'modal');
+        button1.setAttribute('data-bs-target', '#employeeAssign');
+        button1.addEventListener('click', function() {
+          openAssign(item);
+        });
+        // 將按鈕添加到單元格
+        cell3.appendChild(button1);
+  
+      });
+    }
+  
+    // 獲取員工的數據並填充下拉式選項框
+    function populateDropdowns(employee) {
+      fetch('/api/employee')
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+          const employeeSelect = document.getElementById(employee);
+  
+          // 清空下拉式選項框
+          employeeSelect.innerHTML = '';
+  
+          // 填充部門選項
+          data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.code;
+            option.textContent = item.name;
+            employeeSelect.appendChild(option);
+          });
+  
+          employeeSelect.value = '';
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+  
+      document.getElementById('employeeAssignSelect').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        if (!ogEmployee.includes(selectedOption.value) && !newEmployee.includes(selectedOption.value)) {
+          createLabel(selectedOption.text, selectedOption.value);
+          newEmployee.push(selectedOption.value);
+          // console.log('newEmployee:' + newEmployee);
+        }
+      });  
+    }
+  
+    // 打開課程指派的對話框
+    function openAssign (item) {
+      console.log(item);
+      // 獲取對話框元素
+      var modal = new bootstrap.Modal(document.getElementById('employeeAssign'));
+  
+      ogEmployee = [];
+      newEmployee = [];
+      delEmployee = [];
+      // console.log(ogEmployee + newEmployee + delEmployee);
+      id = item.id;
+  
+      // 獲取輸入元素
+      var className = document.getElementById('employeeAssignName');
+      // 設置輸入元素的值
+      className.innerHTML = item.id + ' ' + item.name;
+  
+      // 獲取輸入元素
+      var member = document.getElementById('chooseMember');
+      // 設置輸入元素的值
+      member.innerHTML = item.enrollment_count + '/' + item.engaged_emp_num;
+  
+      populateDropdowns('employeeAssignSelect');
+  
+      // 獲取輸入元素
+      var employee = document.getElementById('employeeSelect');
+      employee.innerHTML = '';
+      if (item.enrollment_list) {
+        item.enrollment_list.forEach(item1 => {
+          createLabel(item1.employee_name, item1.employee_code);
+          ogEmployee.push(item1.employee_code);
+          // console.log('ogEmployee:' + ogEmployee);
+        })
+      }
+      
+    }
+  
+    // 建立標籤
+    function createLabel (employee_name, employee_code) {
+      // 創建包含刪除功能的框框元素
+      var tagContainer = document.createElement('div');
+      tagContainer.className = 'tag-container';
+  
+      var tag = document.createElement('div');
+      tag.className = 'tag';
+  
+      var tagText = document.createElement('span');
+      tagText.className = 'tag-text';
+      tagText.innerText = employee_name;
+  
+      var tagDelete = document.createElement('span');
+      tagDelete.className = 'tag-delete';
+      tagDelete.innerHTML = '&times;'; // 使用 "x" 作為刪除符號
+      tagDelete.addEventListener('click', function() {
+        tagContainer.remove();
+        deleteLabel(employee_code);
+      });
+      // 將元素添加到框框中
+      tag.appendChild(tagText);
+      tag.appendChild(tagDelete);
+      tagContainer.appendChild(tag);
+      // 將框框添加到顯示區域中
+      document.getElementById('employeeSelect').appendChild(tagContainer);
+    }
+  
+    // 刪除標籤
+    function deleteLabel (employee_code) {
+      delEmployee.push(employee_code);
+      // console.log('delEmployee' + delEmployee);
+      if (ogEmployee.includes(employee_code)) {
+        var index = ogEmployee.indexOf(employee_code);
+        if (index !== -1) {
+          ogEmployee.splice(index, 1); // 从索引位置开始移除 1 个元素
+        }
+        // console.log('ogEmployee:' + ogEmployee);
+      }
+      else if (newEmployee.includes(employee_code)) {
+        var index = newEmployee.indexOf(employee_code);
+        if (index !== -1) {
+          newEmployee.splice(index, 1); // 从索引位置开始移除 1 个元素
+        }
+        // console.log('newEmployee:' + newEmployee);
+      }
+    }
+  
+    // 儲存選擇員工對話框
+    function storeEmployee () {
+      var requestData = {}
+      requestData['delete_codes'] = delEmployee;
+      requestData['add_codes'] = newEmployee;
+      requestData['cid'] = id;
+      var jsonString = JSON.stringify(requestData);
+      // console.log(jsonString);
+      // url 為儲存資料的 API url ，方法是 POST
+      var url = '/api/plan';
+      // 處理 PUT 請求
+      fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonString,
+        })
+          .then(response => response.json())
+          .then(data => {
+            // console.log(data);
+            if (data.message === 'Course assignments updated successfully') {
+              showAlert('儲存成功');
+            } else {
+              showAlert('儲存失敗');
+            }
+          })
+          .catch(error => {
+            console.error('Error making POST request:', error);
+            showAlert('儲存失敗');
+          });
+      closeEdit();
+    }
+  
+    // 刪除課程裡的員工
+    function deleteMember (id, code) {
+      // console.log(deleteData);
+      var url = '/api/lecturerAssignment/' + deleteData.id;
+      // url 為刪除資料的 API url ，方法是 DELETE
+      fetch(url, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // return response.json();
+        })
+        .then(data => {
+          // 處理刪除成功的邏輯
+          console.log('Delete request response:', data);
+          return data;
+        })
+        .catch(error => {
+          console.error('Error deleting data:', error);
+          return data;
+        });
+    }
+  
+    // 關閉沒有關閉成功的 backdrop
+    function closeEdit () {
+      var modalBackdrops = document.querySelectorAll('.modal-backdrop');
+  
+      // 遍歷所有找到的元素
+      modalBackdrops.forEach(function(backdrop) {
+        // 處理每個 .modal-backdrop 元素
+        backdrop.style.display = 'none';
+      });
+    }
+  
+    // 顯示 alert， msg 是要顯示的文字內容
+    function showAlert (msg)
+    {
+      var content = document.getElementById('alertContent');
+      content.textContent = msg;
+      var autoClosingDialog = new bootstrap.Modal(document.getElementById('autoClosingModal'), {
+        backdrop: 'static', // 防止用戶點擊背景關閉
+        keyboard: false // 防止用戶點擊ESC關閉
+      });
+  
+      autoClosingDialog.show();
+  
+      // 使用 setTimeout 設置一定時間後自動關閉
+      setTimeout(function() {
+        autoClosingDialog.hide();
+      }, 3000); // 3 秒後自動關閉
+      // 儲存完之後會執行更新課程列表的資料
+      getData(apiUrl);
+    }
+  
+    getData(apiUrl);
+    showTime();
+  </script>
+  <!-- js end -->
+
+</body>
+
+</html>

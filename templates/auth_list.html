@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="emp_auth_index">人員與權限管理</a></li>
+                        <li class="breadcrumb-item"><a href="auth_index">帳號與權限管理</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">身份權限管理</li>
+                    </ol>
+                </nav>
+                <div class="container p-0 m-0 d-flex flex-wrap justify-content-end gap-3">
+                    <p class="fs-2 fw-bold">身份權限管理</p>
+                    <button type="button" style="height: 6vh;"
+                        class="btn btn-primary rounded-4 px-4 ms-auto fs-6 py-0 fw-bold" data-bs-toggle="modal"
+                        data-bs-target="#addRoleModal" onclick="addRole()">
+                        新增身份
+                    </button>
+                    <!-- addRole modal -->
+                    <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="addRoleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form class="needs-validation" method="POST">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="identityModalLabel">身份新增</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form row">
+                                            <div class="row align-items-center mt-4">
+                                                <div class="col-auto">
+                                                    <h6 class="px-0">身份名稱：</h4>
+                                                </div>
+                                                <div class="col mx-1 p-0">
+                                                    <input id="addInputName" type="text" class="form-control rounded-2"
+                                                        required>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <h6 class="px-0">身份説明：</h4>
+                                                </div>
+                                                <div class="col mx-1 p-0">
+                                                    <input id="addInputDes" type="text" class="form-control rounded-2"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <h6 class="text-secondary">身份成員</h6>
+                                        <div class="row align-items-center justify-content-center">
+                                            <h6 class="col-auto my-auto">搜尋使用者：</h6>
+                                            <div class="col">
+                                                <div class="input-group">
+                                                    <input id="ser_input" type="text" class="form-control">
+                                                    <button type="button" onclick="searchUsers(this, 'ADD')"
+                                                        class="btn btn-primary dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h6 class="pe-4 my-2">已分配該身份使用者：</h6>
+                                        <div id="addRoleSelectedMember" class="d-flex flex-wrap">
+
+                                        </div>
+                                        <hr>
+                                        <table id="addPerTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">
+                                                        <input type="checkbox" id="selectAllPermissions">
+                                                        <label for="selectAllPermissions"></label>
+                                                    </th>
+                                                    <th scope="col">權限名稱</th>
+                                                    <th scope="col">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">關閉</button>
+                                        <button type="submit" class="btn btn-warning">新增</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group justify-content-end">
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="search" id="form1" class="form-control" />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <!-- mainTable -->
+                <div class="container mt-5">
+                    <table id="rolesTable" class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th scope="col">身份名稱</th>
+                                <th scope="col">說明</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- editMember modal -->
+                <div class="modal fade" id="editMembersModal" tabindex="-1" role="dialog"
+                    aria-bs-labelledby="editMembersModalLabel" aria-bs-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editMembersModalLabel">身份成員編輯</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6></h6>
+                                <div class="row align-items-center justify-content-center">
+                                    <h6 class="col-auto my-auto">搜尋使用者：</h6>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input id="ser_input" type="text" class="form-control">
+                                            <button type="button" onclick="searchUsers(this, 'EDIT')"
+                                                class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="pe-4 my-2">已分配該身份使用者：</h6>
+                                <div id="selectedUsers" class="d-flex flex-wrap">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="saveSelectedMembers()">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- settingsPermission modal -->
+                <div class="modal fade" id="permissionSettingsModal" tabindex="-1" role="dialog"
+                    aria-labelledby="permissionSettingsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="permissionSettingsModalLabel">權限設定</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6></h6>
+                                <table id="perTable" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                <input type="checkbox" id="selectAllPermissions">
+                                                <label for="selectAllPermissions"></label>
+                                            </th>
+                                            <th scope="col">權限名稱</th>
+                                            <th scope="col">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button type="button" class="btn btn-primary" onclick="savePermissionEdit()">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- confirmDelete modal -->
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel">確認刪除</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                確定要刪除嗎？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteBtn"
+                                    onclick="roleDelete()">確認刪除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" style="height: 6vh;" class="btn btn-danger rounded-4 px-4 fs-6 py-0 fw-bold">
+                        批次刪除
+                    </button>
+                    <p id="updateTime" class="text-right ms-auto">最後更新時間</p>
+                </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var modalFrom;
+    var selectedUsers = [];
+    var PERMISSION_VER_NAME = [
+        { "id": "ADD", "name": "新增" },
+        { "id": "READ", "name": "讀取" },
+        { "id": "WRITE", "name": "修改" },
+        { "id": "DELETE", "name": "刪除" }
+    ];
+
+    const getRolesList = async () => {
+        const response = await fetch('http://localhost:3001/api/roles', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const postNewRole = async (formData) => {
+        const response = await fetch('http://localhost:3001/api/roles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: formData
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getPermissionList = async () => {
+        const response = await fetch('http://localhost:3001/api/permissions', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getUserList = async (input) => {
+        // const response = await fetch('http://localhost:3001/api/roles', {
+        //     method: 'GET',
+        // });
+
+        const data = await [
+            {
+                'emp_name': '陳ＯＯ',
+                'emp_id': '102'
+            },
+            {
+                'emp_name': 'sha',
+                'emp_id': '001'
+            }
+        ];
+        return data;
+    };
+
+    const getDelResponse = async (roleId) => {
+        const response = await fetch(`http://localhost:3001/api/roles/${roleId}`, {
+            method: 'DELETE',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    $(document).ready(function () {
+        $('#addRoleModal form').on('submit', function (event) {
+            event.preventDefault();
+            comfirmAddRole();
+        });
+
+        getRolesList().then((data) => {
+            updateTime();
+            var roles = data['roles'];
+            roles.forEach(element => {
+                let ROLE_ID = element.role_id;
+                let ROLE_NAME = element.role_name;
+                let ROLE_DESCRIPTION = element.role_description;
+                let PERMISSIONS = element.permissions;
+                let ROLE_MEMBERS = element.role_members;
+                addRoleTr(ROLE_ID, ROLE_NAME, ROLE_DESCRIPTION,
+                    PERMISSIONS, ROLE_MEMBERS);
+            });
+        });
+    });
+
+    function addRole() {
+        selectedUsers = [];
+        var inputName = $('#addInputName').val("");
+        var inputDes = $('#addInputDes').val("");
+        $('#addRoleSelectedMember').empty();
+        $('#addPerTable').find('tbody').empty();
+        getPermissionList().then((data) => {
+            let PERMISSIONS = data.permissions;
+            PERMISSIONS.forEach(element => {
+                let ROLE_PERMISSION_ID = element.role_permission_id;
+                let ROLE_PERMISSION_NAME = element.role_permission_name;
+                var perTr = $('<tr></tr>');
+                perTr.append('<td><input type="checkbox" class="memberCheckbox"><label for="memberCheckbox"></label></td>');
+                perTr.append(`<td>${ROLE_PERMISSION_NAME}</td>`);
+                var checkBoxes = $('<td></td>')
+                PERMISSION_VER_NAME.forEach(per => {
+                    var id = `add_${ROLE_PERMISSION_ID}_${per.id}`;
+                    var formCheck = $(`<div class="form-check form-check-inline"><label class="form-check-label" for="${id}">${per.name}</label></div>`);
+                    formCheck.append(`<input type="checkbox" class="form-check-input" id="${id}">`);
+                    checkBoxes.append(formCheck);
+                });
+
+                perTr.append(checkBoxes);
+                $('#addPerTable').find('tbody').append(perTr);
+            });
+        });
+    }
+
+    function addRoleTr(id, roleName, roleDes, rolePermissions, roleMembers) {
+        var roleTr = $(`<tr id=role_${id}></tr>`)
+        roleTr.append(`<td><input type="checkbox" id="item_${id}"></td>`)
+        roleTr.append(`<td>${roleName}</td>`);
+        roleTr.append(`<td>${roleDes}</td>`);
+
+        // 操作按鈕-成員
+        var memberBtn = $('<button type="button" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#editMembersModal">身份成員</button>').on('click', () => {
+            modalFrom = id;
+            selectedUsers = [];
+            selectedUsers.push(...roleMembers);
+            $('#selectedUsers').empty();
+            $('#editMembersModal').find('.modal-body > h6:first')('身份名稱：' + roleName);
+            roleMembers.forEach(element => {
+                let EMP_ID = element.emp_id;
+                let EMP_NAME = element.emp_name;
+                selectMember(EMP_ID, EMP_NAME);
+            });
+        });
+        // 操作按鈕-權限
+        var permissionsBtn = $('<button type="button" class="btn btn-success mx-1" data-bs-toggle="modal" data-bs-target="#permissionSettingsModal">身份權限</button>').on('click', () => {
+            modalFrom = id;
+            $('#perTable').find('tbody').empty();
+            $('#permissionSettingsModal').find('.modal-body > h6:first')('身份名稱：' + roleName);
+            getPermissionList().then((data) => {
+                let PERMISSIONS = data.permissions;
+                PERMISSIONS.forEach(element => {
+                    let ROLE_PERMISSION_ID = element.role_permission_id;
+                    let ROLE_PERMISSION_NAME = element.role_permission_name;
+                    var perTr = $('<tr></tr>');
+                    perTr.append('<td><input type="checkbox" class="memberCheckbox"><label for="memberCheckbox"></label></td>');
+                    perTr.append(`<td>${ROLE_PERMISSION_NAME}</td>`);
+                    var checkBoxes = $('<td></td>')
+                    PERMISSION_VER_NAME.forEach(per => {
+                        var checked = "";
+                        var id = `${ROLE_PERMISSION_ID}_${per.id}`;
+
+                        //查找原先有的權限
+                        var isPerExistInRole = rolePermissions.findIndex((sel) => sel.role_permission_id == ROLE_PERMISSION_ID);
+                        if (isPerExistInRole !== -1) {
+                            var isPermissionExist = rolePermissions[isPerExistInRole].role_permissions.findIndex(function (permission) {
+                                return permission == per.id;
+                            });
+
+                            if (isPermissionExist !== -1) {
+                                checked = 'checked';
+                            }
+                        }
+
+                        var formCheck = $(`<div class="form-check form-check-inline"><label class="form-check-label" for="${id}">${per.name}</label></div>`);
+                        formCheck.append(`<input type="checkbox" class="form-check-input" id="${id}" ${checked}>`);
+                        checkBoxes.append(formCheck);
+                    });
+
+                    perTr.append(checkBoxes);
+                    $('#perTable').find('tbody').append(perTr);
+                });
+            });
+
+        });
+        // 操作按鈕-刪除
+        var deleteBtn = $('<button type="button" class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">刪除</button>').on('click', () => {
+            modalFrom = id;
+        });
+
+        var buttonTd = $('<td></td>');
+        buttonTd.append(memberBtn);
+        buttonTd.append(permissionsBtn);
+        buttonTd.append(deleteBtn);
+        roleTr.append(buttonTd);
+        $('#rolesTable').find('tbody').append(roleTr);
+    }
+
+    function selectMember(empId, empName, type) {
+        var divCon = $('<div class="d-flex align-items-center mb-2 border border-2 p-1 rounded-3 bg-secondary text-light"></div>');
+        divCon.append(`<span class="mx-3">${empName}</span>`)
+        var deleteUserBtn = $('<button type="button" class="btn-close" aria-label="Close"></button>').on('click', function () {
+            var indexToRemove = selectedUsers.findIndex(function (emp) {
+                return emp.emp_id === empId;
+            });
+
+            if (indexToRemove !== -1) {
+                selectedUsers.splice(indexToRemove, 1);
+            }
+
+            $(this).closest('div').remove();
+        });
+
+        divCon.append(deleteUserBtn);
+        if (type == 'ADD') {
+            $('#addRoleSelectedMember').append(divCon);
+        } else {
+            $('#selectedUsers').append(divCon);
+        }
+    }
+
+    function searchUsers(btn, type) {
+        $(btn).parent().find('ul').empty();
+        var searchInput = $('#ser_input').val();
+
+        getUserList(searchInput).then((data) => {
+            data.forEach(element => {
+                let EMP_ID = element.emp_id;
+                let EMP_NAME = element.emp_name;
+                var isExist = selectedUsers.findIndex(function (emp) {
+                    return emp.emp_id == EMP_ID;
+                });
+                if (isExist == -1) {
+                    var userItem = $(`<li class="dropdown-item">${EMP_NAME}</li>`).on('click', function () {
+                        selectMember(EMP_ID, EMP_NAME, type);
+                        selectedUsers.push(element);
+                    });
+                    $(btn).parent().find('ul').append(userItem);
+                }
+            });
+        });
+    }
+
+    function saveSelectedMembers() {
+        var empId = [];
+        selectedUsers.forEach(element => {
+            empId.push(`${element.emp_id}`);
+        });
+        var resultObject = {
+            "role_id": modalFrom.toString(),
+            "role_members": empId
+        };
+
+        updateTime();
+        var resultJson = JSON.stringify(resultObject, null, 2);
+        console.log(resultJson);
+    }
+
+    function savePermissionEdit() {
+        var ids = $('#perTable .form-check-input:checked').map(function () {
+            return this.id;
+        }).get();
+        var permissions = [];
+
+        ids.forEach((element) => {
+            var id = element.split('_')[0];
+            var per = element.split('_')[1];
+            var isExistIndex = permissions.findIndex((i) => i.role_permission_id === id);
+            if (isExistIndex !== -1) {
+                permissions[isExistIndex].role_permissions.push(per);
+            } else {
+                permissions.push(
+                    {
+                        "role_permission_id": id,
+                        "role_permissions": [per]
+                    }
+                );
+            }
+        });
+
+        var resultObject = {
+            "role_id": modalFrom.toString(),
+            "permissions": permissions
+        };
+
+        updateTime();
+        var resultJson = JSON.stringify(resultObject, null, 2);
+        console.log(resultJson);
+    }
+
+    async function comfirmAddRole() {
+        var inputName = $('#addInputName').val();
+        var inputDes = $('#addInputDes').val();
+
+        var empId = [];
+        selectedUsers.forEach(element => {
+            empId.push(`${element.emp_id}`);
+        });
+
+        var permissions = [];
+        var ids = $('#addPerTable .form-check-input:checked').map(function () {
+            return this.id;
+        }).get();
+        ids.forEach((element) => {
+            var id = element.split('_')[1];
+            var per = element.split('_')[2];
+            var isExistIndex = permissions.findIndex((i) => i.role_permission_id === id);
+            if (isExistIndex !== -1) {
+                permissions[isExistIndex].role_permissions.push(per);
+            } else {
+                permissions.push(
+                    {
+                        "role_permission_id": id,
+                        "role_permissions": [per]
+                    }
+                );
+            }
+        });
+
+        var resultObject = {
+            "role_name": inputName,
+            "role_description": inputDes,
+            "role_members": empId,
+            "permissions": permissions
+        };
+
+        var resultJson = JSON.stringify(resultObject, null, 2);
+        var status = await postNewRole(resultJson);
+        if(status.status == 'success'){
+            console.log(resultJson);
+        }
+    }
+
+    function roleDelete() {
+        getDelResponse(modalFrom).then((data) => {
+            console.log(data.status);
+            if (data.status == "success") {
+                $(`#role_${modalFrom}`).remove();
+                $('#confirmDeleteModal').modal('hide');
+                updateTime();
+            }
+        });
+    }
+
+    function showAlert(content) {
+        $('.alert').alert('close');
+        var alert = $(`<div class="mt-2 alert alert-success" role="alert">${content}</div>`);
+        $('#rolesTable').after(alert);
+
+        setTimeout(function () {
+            alert.alert('close');
+        }, 2000);
+    }
+   
+    function updateTime() {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+        var day = ('0' + currentDate.getDate()).slice(-2);
+        var hours = ('0' + currentDate.getHours()).slice(-2);
+        var minutes = ('0' + currentDate.getMinutes()).slice(-2);
+        var seconds = ('0' + currentDate.getSeconds()).slice(-2);
+
+
+        var formattedDate = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+
+        $('#updateTime')("最後更新時間 ： " + formattedDate);
+    }
+</script>

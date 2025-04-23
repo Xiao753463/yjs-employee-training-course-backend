@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+    
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="competency_index">職能管理</a></li>
+                        <li class="breadcrumb-item"><a href="competency_skills">教育訓練之生產技術評量</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">受訓人員評量規劃</li>
+                    </ol>
+                </nav>
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmDeleteModalLabel">確認刪除</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                確定要刪除嗎？
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteBtn"
+                                    onclick="delAssessment()">確認刪除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between gap-3 align-items-center">
+                    <p class="fs-2 fw-bold my-auto">受訓人員評量規劃</p>
+                    <div>
+                        <button id="editAndSaveBtn" type="button" class="btn btn-warning px-3" data-toggle="edit"
+                            onclick="inputLockToggle()">編輯</button>
+                        <button type="button" class="btn btn-primary px-3">新增員工</button>
+                    </div>
+                </div>
+                <table class="table" id="assessmentTable">
+                    <thead>
+                        <tr>
+                            <th>員工姓名</th>
+                            <th>評量日期</th>
+                            <th>評量時間</th>
+                            <th>評量項目</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var delAssessmentId;
+
+    const getAssessmentList = async () => {
+        const response = await fetch('http://localhost:3001/api/assessment', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getitemList = async () => {
+        const response = await fetch('http://localhost:3001/api/exam-items', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const delAssessment = async (id) => {
+        const response = await fetch('http://localhost:3001/api/assessment/' + id, {
+            method: 'DELETE',
+        });
+
+        const data = await response.json();
+        if (data.status == "success") {
+            location.reload();
+        }
+    };
+
+    const sendNotify = async (pushContent) => {
+        const response = await fetch('http://localhost:3001/api/notify', {
+            method: 'POST',
+            body: JSON.stringify(pushContent)
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    function generateTableTr(data, item) {
+        let ASSESSMENT_ID = data.assessment_id;
+        let EMP_ID = data.emp_id;
+        let EMP_NAME = data.emp_name;
+        let ASSESSMENT_DATE = data.assessment_date;
+        let ASSESSMENT_STARTTIME = data.assessment_startTime;
+        let ASSESSMENT_ENDTIME = data.assessment_endTime;
+        let ITEM_2_ID = data.item_2_id;
+        var empTr = $(`<tr data-assId=${ASSESSMENT_ID}></tr>`);
+        empTr.append(`<td><input class="form-control" type="text" value="${EMP_NAME}" disabled></td>`);
+        empTr.append(`<td><input class="form-control" type="date" value=${ASSESSMENT_DATE}></td>`);
+        var timePickerDiv = $('<div class="row align-items-center justify-content-center"></div>');
+        timePickerDiv.append(`<div class="col"><input class="form-control" type="time" value=${ASSESSMENT_STARTTIME}></div>`);
+        timePickerDiv.append('<div class="col-auto">~</div>');
+        timePickerDiv.append(`<div class="col"><input class="form-control" type="time" value=${ASSESSMENT_ENDTIME}></div>`);
+        var timePickerTd = $('<td></td>');
+        timePickerTd.append(timePickerDiv);
+        empTr.append(timePickerTd);
+        var assBtnTd = $('<div class="row gap-1 align-items-center justify-content-center align-self-center"></div>');
+        var levSelect = $(`<select class="col form-select" aria-label="Default select example"></select>`);
+        item.forEach(element => {
+            let ITEMS_ITEM_2_ID = element.item_2_id
+            let ITEMS_ITEM_2_NAME = element.item_2_name
+            let isSelected = "";
+            if (ITEMS_ITEM_2_ID == ITEM_2_ID) {
+                isSelected = "selected";
+            }
+            levSelect.append(`<option value="${ITEMS_ITEM_2_ID}" ${isSelected}>${ITEMS_ITEM_2_NAME}</option>`);
+        });
+        assBtnTd.append(levSelect);
+
+        //評量按鈕
+        var toAssessmenBtn = $('<button type="button" class="col btn btn-primary text-nowrap">評量</button>').on('click', function () {
+            var dataToPass = {
+                date: ASSESSMENT_DATE,
+                startTime: ASSESSMENT_STARTTIME,
+                endTime: ASSESSMENT_ENDTIME,
+                item_2_id: ITEM_2_ID
+            };
+
+            var queryParams = $.param(dataToPass);
+            window.location.href = 'competency_assess?' + queryParams;
+        });
+        //通知按鈕
+        var notifyBtn = $('<button type="button" class="col btn btn-success text-nowrap">通知</button>').on('click', function () {
+            let OPTIONAL_VAL = $(this).parent().find('option:selected')();
+            sendNotify({
+                assessment_id: ASSESSMENT_ID,
+                emp_id: EMP_ID,
+                content: `員工${EMP_NAME}將於${ASSESSMENT_DATE} ${ASSESSMENT_STARTTIME} 至 ${ASSESSMENT_ENDTIME} 進行「${OPTIONAL_VAL}」的評量測試。`
+            }).then((status) => {
+                showAlert(status.message);
+            });
+        });
+        //刪除按鈕
+        var delBtn = $('<button type="button" class="col btn btn-danger text-nowrap" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">刪除</button>').on('click', function () {
+            delAssessmentId = ASSESSMENT_ID;
+        });
+
+        assBtnTd.append(toAssessmenBtn);
+        assBtnTd.append(notifyBtn);
+        assBtnTd.append(delBtn);
+        empTr.append(assBtnTd);
+
+        return empTr;
+    }
+
+    $(document).ready(async function () {
+        var ITEM_2_LIST = [];
+        const items = await getitemList();
+        const data = await getAssessmentList();
+
+        items.items.forEach((item1) => {
+            item1.children.forEach((item2) => {
+                let ITEM_1_ID = item1.item_1_id
+                let ITEM_2_ID = item2.item_2_id
+                let ITEM_2_NAME = item2.item_2_name
+                ITEM_2_LIST.push({
+                    item_1_id: ITEM_1_ID,
+                    item_2_id: ITEM_2_ID,
+                    item_2_name: ITEM_2_NAME
+                });
+            });
+        });
+
+        data.assessments.forEach((element) => {
+            $('#assessmentTable tbody').append(generateTableTr(element, ITEM_2_LIST));
+        });
+
+        $('input[type="time"], input[type="date"]').prop('disabled', true);
+        $('select').prop('disabled', true);
+    });
+
+    function inputLockToggle() {
+        $('#editAndSaveBtn').toggleClass('btn-warning');
+        $('#editAndSaveBtn').toggleClass('btn-success');
+        if ($('#editAndSaveBtn').data('toggle') == 'edit') {
+            $('#editAndSaveBtn').data('toggle', 'save');
+            $('#editAndSaveBtn')('儲存');
+            $('input[type="time"], input[type="date"]').prop('disabled', false);
+            $('select').prop('disabled', false);
+        } else {
+            $('#editAndSaveBtn').data('toggle', 'edit');
+            $('#editAndSaveBtn')('編輯');
+            $('input[type="time"], input[type="date"]').prop('disabled', true);
+            $('select').prop('disabled', true);
+        }
+    }
+
+    function showAlert(content) {
+        $('.alert').alert('close');
+        var alert = $(`<div class="mt-2 alert alert-success" role="alert">${content}</div>`);
+        $('.main table').after(alert);
+
+        setTimeout(function () {
+            alert.alert('close');
+        }, 2000);
+    }
+</script>

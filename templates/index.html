@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+
+</head>
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+               <p class="fs-5">首頁</p>
+               <div class="container p-0 m-0 d-flex flex-wrap gap-3">
+                <a href="emp_auth_index">
+                    <button type="button" style="width: 28vmin;" class="btn btn-secondary rounded-4 p-3">
+                        <div class="fa-solid fa-user icon mb-2" style="color: white;"></div>
+                        <p class="fs-4 fw-bold text-white m-0">人員與權限管理</p>
+                    </button>
+                </a>
+                <a href="edu_plan_index">
+                    <button type="button" style="width: 28vmin;" class="btn btn-secondary rounded-4 p-3">
+                        <i class="fa-solid fa-book-bookmark icon mb-2" style="color: white;"></i>
+                        <p class="fs-4 fw-bold text-white m-0">教育訓練管理</p>
+                    </button>
+                </a>
+                <a href="competency_index">
+                    <button type="button" style="width: 28vmin;" class="btn btn-secondary rounded-4 p-3">
+                        <i class="fa-solid fa-clipboard-check icon mb-2" style="color: white;"></i>
+                        <p class="fs-4 fw-bold text-white m-0">職能管理</p>
+                    </button>
+                </a>
+               </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+</html>
+<!-- <script type="text/javascript">
+    // 抓取session 中的 login值
+    function getSession () {
+        // 从 sessionStorage 中获取存储的值
+        var sessionValue = sessionStorage.getItem('username');
+        // 获取 sessionStorage 中的所有键
+        // var keys = Object.keys(sessionStorage);
+
+        // 遍历所有键，并获取对应的值
+        // keys.forEach(function(key) {
+        //     var value = sessionStorage.getItem(key);
+        //     // console.log('Key:', key, 'Value:', value);
+        // });
+        if (sessionValue) {
+            // 獲取輸入元素
+            var userName = document.getElementById('userName');
+            // console.log('userName' + sessionValue);
+            // 設置輸入元素的值
+            userName.innerHTML = sessionValue;
+        } else {
+            window.location.assign('login');
+        }
+    }
+    getSession();
+</script> -->

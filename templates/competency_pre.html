@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+    
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%;">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="competency_index">職能管理</a></li>
+                        <li class="breadcrumb-item"><a href="competency_skills">教育訓練之生產技術評量</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">教育訓練評量表準備</li>
+                    </ol>
+                </nav>
+                <p class="fs-2 fw-bold">教育訓練評量表準備</p>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                    aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header gap-3 align-items-center">
+                        <h2 class="my-auto">評量項目</h2>
+                        <button id="drawerEdit" class="btn btn-warning ms-auto" type="button" data-bs-toggle="modal"
+                            data-bs-target="#editModal" onclick="updateLevelModal()">編輯</button>
+                        <button type="button" class="btn-close" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="accordion" id="accordionDrawer">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="editModal" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">評量項目編輯</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form">
+                                    <div id="itemContainer">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button type="button" class="btn btn-warning" onclick="saveEditModal()">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="SOPModal" aria-labelledby="SOPModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">項目SOP</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <h6>文字說明：</h6>
+                                <div id="sopText">
+
+                                </div>
+                                <div id="sopImages">
+
+                                </div>
+                                <div class="row-2 mt-2">
+                                    <button type="button" id="sopAddImageBtn"
+                                        class="btn btn-primary text-nowrap">新增圖片</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                <button type="button" class="btn btn-warning" onclick="saveSOP()">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" style="z-index: 0;" id="subjects">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- main code end -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    const getItems = async () => {
+        const response = await fetch('http://localhost:3001/api/exam-items', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getDetailItem = async (item2Id) => {
+        const response = await fetch('http://localhost:3001/api/exam/:level2_id', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getSOP = async (item3Id) => {
+        const response = await fetch('http://localhost:3001/api/exam-sop/:levelId_1/:levelId_2', {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    $(document).ready(function () {
+        var myOffcanvas = $('#offcanvasRight');
+        var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
+        bsOffcanvas.show();
+        getItems().then((data) => {
+            data.items.forEach((element, index) => {
+                let ITEM_1_ID = element.item_1_id;
+                let ITEM_1_NAME = element.item_1_name;
+                var accItem = $('<div class="accordion-item"></div>');
+                var accheader = $(`<h2 class="accordion-header" id="heading${index}"><button class="fw-bold accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="true" aria-controls="collapse${index}">${ITEM_1_NAME}</button></h2>`);
+                var accCollapse = $(`<div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionDrawer"></div>`);
+                var accBody = $('<div class="accordion-body"></div>');
+                element.children.forEach((itemTwo, index) => {
+                    let ITEM_2_ID = itemTwo.item_2_id;
+                    let ITEM_2_NAME = itemTwo.item_2_name;
+                    var level = $(`<div class="m-2"><button type="button" class="btn btn-link fs-6">${ITEM_2_NAME}</button></div>`).on('click', function () {
+                        generateItem(ITEM_1_ID, ITEM_2_ID);
+                        bsOffcanvas.hide();
+                    });
+                    accBody.append(level);
+                });
+                accCollapse.append(accBody);
+                accItem.append(accheader);
+                accItem.append(accCollapse);
+                $('#accordionDrawer').append(accItem);
+            });
+        });
+    });
+
+    function generateItem(item1Id, item2Id) {
+
+        function generateL3(data) {
+            let ITEM_3_ID = data != undefined ? data.item_3_id : "";
+            let ITEM_3_NAME = data != undefined ? data.item_3_name : "";
+            var object = $('<div class="ITEM mb-2"></div>')
+            var borderedDiv = $('<div class="card"></div>');
+            var header = $('<div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 px-2"></div>');
+            header.append(`<div class="flex-fill"><input type="text" class="me-auto rounded-2 form-control" value="${ITEM_3_NAME}" data-item="${ITEM_3_ID}" required></div>`);
+            var sopBtn = $('<button type="button" class="my-2 btn btn-success text-nowrap rounded-3" data-bs-toggle="modal" data-bs-target="#SOPModal">SOP</button>').on('click', function () {
+                generateSOPModal(ITEM_3_ID);
+            });
+            var editBtn = $('<button type="button" class="my-2 btn btn-warning text-nowrap rounded-3" data-type="edit">編輯</button>').on('click', function () {
+                let btnType = $(this).data('type');
+                if (btnType == "edit") {
+                    $(this).data('type', "save");
+                    $(this)('儲存');
+                    $(this).closest('.card').find("input[type='text']").prop('disabled', false);
+                    $(this).closest('.card').find(".card-body button").prop('disabled', false);
+                } else {
+                    $(this).data('type', "edit");
+                    $(this)('編輯');
+                    $(this).closest('.card').find("input[type='text']").prop('disabled', true);
+                    $(this).closest('.card').find(".card-body button").prop('disabled', true);
+                    saveLevels(item2Id);
+                }
+            });
+            var deleteBtn = $('<button type="button" class="my-2 btn btn-danger text-nowrap rounded-3">刪除項目</button>');
+            var headerBtns = $('<div class="d-flex gap-1"></div>');
+            headerBtns.append(sopBtn);
+            headerBtns.append(editBtn);
+            headerBtns.append(deleteBtn);
+            header.append(headerBtns);
+
+            deleteBtn.on('click', function () {
+                if ($('#subjects').find('.ITEM').length == 1) {
+                    //last one.
+                } else {
+                    $(this).closest('.ITEM').remove();
+                    saveLevels(level2_Id);
+                }
+            });
+
+            borderedDiv.append(header);
+
+            var cardBody = $('<div class="card-body"></div>')
+            var orderedList = $('<ol></ol>');
+            var addDetailButton = $('<button type="button" class="my-2 btn btn-primary text-nowrap rounded-3">新增評量細項</button>');
+
+            if (data !== undefined) {
+                data.children.forEach(element => {
+                    orderedList.append(generateL4(element));
+                });
+            } else {
+                orderedList.append(generateL4(undefined));
+            }
+
+            orderedList.append(addDetailButton);
+            cardBody.append(orderedList);
+            borderedDiv.append(cardBody);
+
+            object.append(borderedDiv);
+
+            addDetailButton.on('click', function () {
+                $(this).closest('ol').find('li:last').after(generateL4());
+            });
+
+            return object;
+        }
+
+        function generateL4(data) {
+            let ITEM_4_ID = data != undefined ? data.item_4_id : "";
+            let ITEM_4_NAME = data != undefined ? data.item_4_name : "";
+            let ITEM_MISTAKES = data != undefined ? data.mistakes : [];
+            var listItem = $('<li class="detailContent fw-bold my-2"></li>');
+            var row = $('<div class="px-3 row"></div>');
+            row.append(`<div class="col-auto my-auto"><label class="visually-hidden"></label><input type="text" class="form-control" value="${ITEM_4_NAME}" data-tag="${ITEM_4_ID}"></div>`);
+            var row_radio = $('<div class="col row my-auto"></div>');
+            for (let index = 1; index < 6; index++) {
+                row_radio.append('<div class="form-check col"><input class="form-check-input" type="radio" name="flexRadioDisabled" id="flexRadioDisabled" disabled><label class="form-check-label" for="flexRadioDisabled">' + index + '</label></div>');
+            }
+            row.append(row_radio);
+            var deleteDetailDiv = $('<div class="col my-auto"></div>');
+            var deleteDetailBtn = $('<button type="button" class="my-2 btn btn-white border-danger border-2 text-danger text-nowrap rounded-3">刪除細項</button>').on('click', function () {
+                if ($(this).closest('ol').find('li').length == 1) {
+                    //last one.
+                } else {
+                    $(this).closest('.detailContent').remove();
+                }
+            });
+            deleteDetailDiv.append(deleteDetailBtn);
+            row.append(deleteDetailDiv);
+
+            listItem.append(row);
+
+            var row2 = $('<div class="row g-3"></div>');
+            row2.append('<h6 class="col-auto mt-4">常見錯誤：</h6>');
+
+            function deleteCommonBtn() {
+                var deleteCommonBtn = $('<button type="button" class="col-auto mx-1 mt-1 btn btn-white border-danger border-2 text-danger text-nowrap rounded-3">刪除常見錯誤</button>');
+                deleteCommonBtn.on('click', function () {
+                    if ($(this).parent().parent().find('.commonInput').length == 1) {
+                        //last one.
+                    } else {
+                        $(this).closest('.commonInput').remove();
+                    }
+                });
+
+                return deleteCommonBtn;
+            }
+
+            function commonMistakeDiv(element) {
+                let MISTAKE_ID = element != undefined ? element.mistake_id:"";
+                let MISTAKE_NAME = element != undefined ? element.mistake_name:"";
+                var misInput = $('<div class="commonInput row align-items-center"></div>');
+                misInput.append(`<div class="col-sm-4"><input type="text" data-misid="${MISTAKE_ID}" class="form-control" value="${MISTAKE_NAME}"></div>`);
+                misInput.append('<div class="col-auto"></div>');
+                misInput.append(deleteCommonBtn());
+
+                return misInput;
+            }
+
+            var commonMistake = $('<div class="col"></div>');
+            if (data != undefined) {
+                ITEM_MISTAKES.forEach(element => {
+                    commonMistake.append(commonMistakeDiv(element));
+                });
+            } else {
+                commonMistake.append(commonMistakeDiv());
+            }
+
+            var addCommonBtn = $('<button type="button" class="col-auto mt-2 btn btn-white border-primary border-2 text-primary text-nowrap rounded-3">新增常見錯誤</button>');
+            commonMistake.append(addCommonBtn);
+
+            row2.append(commonMistake);
+            listItem.append(row2);
+
+            addCommonBtn.on('click', function () {
+                var addTemp = $('<div class="commonInput row mt-2 align-items-center"></div>');
+                addTemp.append('<div class="col-sm-4"><input type="text" class="form-control" placeholder=""></div>');
+                addTemp.append('<div class="col-auto"></div>');
+                addTemp.append(deleteCommonBtn());
+
+                $(this).parent().find('.commonInput:last').after(addTemp);
+            });
+
+            return listItem;
+        }
+
+        $('#subjects').empty();
+        $('#addSubjects').remove();
+        getDetailItem(item2Id).then((data) => {
+            let ITEM_1_NAME = data != undefined ? data.item_1_name : "";
+            let ITEM_2_NAME = data != undefined ? data.child.item_2_name : "";
+            var mainDiv = $('<div class="d-flex justify-content-between align-items-center"></div>');
+            mainDiv.append(`<h5>${ITEM_1_NAME} > ${ITEM_2_NAME}</h5>`);
+            mainDiv.append('<button type="button" class="my-2 btn btn-primary text-nowrap rounded-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">查看項目</button>');
+
+            $('#subjects').append(mainDiv);
+
+            data.child.children.forEach(element => {
+                $('#subjects').append(generateL3(element));
+            });
+
+            $('#subjects').find("input[type='text']").prop('disabled', true);
+            $('#subjects').find(".card-body button").prop('disabled', true);
+
+            var addObjectBtn = $('<button type="button" id="addSubjects" class="col-auto mt-2 btn btn-primary text-nowrap rounded-3">新增評量項目</button>')
+            addObjectBtn.on('click', function () {
+                $('#subjects').find('.ITEM:last').after(generateL3());
+                $('#subjects').find(".ITEM:last input[type='text']").prop('disabled', true);
+                $('#subjects').find(".ITEM:last .card-body button").prop('disabled', true);
+            });
+
+            $('#subjects').after(addObjectBtn);
+        });
+    }
+
+    function updateLevelModal() {
+        getItems().then((data) => {
+            $("#itemContainer").empty();
+            generateItems(data);
+        });
+
+        function generateItems(data) {
+            data.items.forEach(items => {
+                let ITEM_1_ID = items.item_1_id;
+                let ITEM_1_NAME = items.item_1_name;
+                var item = $(`<div class="item"></div>`);
+                item.append(generateL1(ITEM_1_NAME, ITEM_1_ID));
+                items.children.forEach((item2) => {
+                    let ITEM_2_ID = item2.item_2_id;
+                    let ITEM_2_NAME = item2.item_2_name;
+                    item.append(generateL2(ITEM_2_NAME, ITEM_2_ID));
+                });
+
+                item.append(generateL2AddBtn());
+                $("#itemContainer").append(item);
+            });
+
+            $("#itemContainer").append(generateL1AddBtn());
+        }
+
+        function generateL1(defaultInput, id) {
+            var rowL1 = $(`<div class="I-1 row my-1"></div>`);
+            rowL1.append(`<div class="col"><input data-tag="I1+${id}" value="${defaultInput}" type="text" class="form-control rounded-2" required></div>`);
+            var row1DeleteBtn = $('<div class="col"><button type="button" class="btn btn-danger">刪除</button></div>').on('click', function () {
+                console.log($('#itemContainer').find(".itme").length);
+                if ($('#itemContainer').find(".item").length == 1) {
+
+                } else {
+                    $(this).closest(".item").remove();
+                }
+            });
+            rowL1.append(row1DeleteBtn);
+
+            return rowL1;
+        }
+
+        function generateL2(defaultInput, id) {
+            var rowL2 = $(`<div class="I-2 row my-1"></div>`);
+            rowL2.append('<div class="col-1"></div>');
+            rowL2.append(`<div class="col"><input data-tag="I2+${id}" value="${defaultInput}" type="text" class="form-control rounded-2" required></div>`);
+            var rowL2DeleteBtn = $('<div class="col"><button type="button" class="btn btn-danger">刪除</button></div>').on('click', function () {
+                if ($(this).closest('.item').find(".I-2").length == 1) {
+
+                } else {
+                    $(this).closest(".I-2").remove();
+                }
+            });
+            rowL2.append(rowL2DeleteBtn);
+
+            return rowL2;
+        }
+
+        function generateDefaultLevel() {
+            var level = $('<div class="item"></div>');
+            level.append(generateL1("", "newItem_1"));
+            level.append(generateL2("", "newItem_2"));
+            level.append(generateL2AddBtn());
+
+            return level;
+        }
+
+        function generateL1AddBtn() {
+            var rowL1AddBtn = $('<div class="L-add row my-1"><div class="col"><button type="button" class="btn btn-outline-primary">新增</button></div></div>').on('click', function () {
+                $("#itemContainer").find('.item:last').after(generateDefaultLevel());
+            });
+
+            return rowL1AddBtn;
+        }
+
+        function generateL2AddBtn() {
+            var rowL2AddBtn = $('<div class="L-add row my-1"><div class="col-1"></div><div class="col"><button type="button" class="btn btn-outline-primary">新增</button></div></div>').on('click', function () {
+                $(this).closest('.item').find('.I-2:last').after(generateL2("", "newLevel"));
+            });
+
+            return rowL2AddBtn;
+        }
+    }
+
+    function saveEditModal() {
+        var resultJSON = { items: [] };
+        $('#itemContainer .item > .I-1').each(function (index, I1) {
+            var itemObject = { item_1_id: "", item_1_name: "", children: [] };
+            var item1Input = $(I1).find('input');
+            itemObject.item_1_id = item1Input.data('tag').split('+')[1];
+            itemObject.item_1_name = item1Input.val();
+            var correspondingL2 = $(I1).nextAll('.I-2');
+            correspondingL2.find('input').each(function (index, item2Input) {
+                var item2Object = { item_2_id: "", item_2_name: "" };
+                item2Object.item_2_id = $(item2Input).data('tag').split('+')[1];
+                item2Object.item_2_name = $(item2Input).val();
+                itemObject.children.push(item2Object);
+            });
+            resultJSON.items.push(itemObject);
+        });
+
+        console.log(JSON.stringify(resultJSON, null, 2));
+    }
+
+    function generateSOPModal(item3Id) {
+        $("#SOPModal").find('#sopText').empty();
+        $("#SOPModal").find('#sopImages').empty();
+        $("#SOPModal").data('item', item3Id);
+
+        function generateDesTA(data) {
+            let SOP_TEXT = data != undefined ? data.sop_text : "";
+            var desTextArea = $(`<div class="row"><textarea class="form-control" rows="4" required>${SOP_TEXT}</textarea></div>`);
+            return desTextArea;
+        }
+
+        function generateImageArea(data) {
+            let SOP_IMAGE_SRC = data != undefined ? data.img_src : "";
+            let SOP_IMAGE_ILL = data != undefined ? data.img_illustrate : "";
+            let SOP_IMAGE_ID = data != undefined ? data.sop_img_id : "";
+            var imageArea = $('<div class="row sopImage mt-2 border border-1 rounded-2 p-2"></div>');
+            if (SOP_IMAGE_SRC != "") {
+                imageArea.append(`<div class="col-3 p-2 border border-1 rounded-2 d-flex justify-content-center flex-column align-items-center">
+                    <img width="80vmim" style="aspect-ratio: 1 / 1;" src="${SOP_IMAGE_SRC}" data-id="${SOP_IMAGE_ID}">
+                    </div>`);
+            } else {
+                imageArea.append(`<div class="col-3 p-2 border border-1 rounded-2 d-flex justify-content-center flex-column align-items-center"><input class="form-control" type="file" required></div>`);
+            }
+            imageArea.append(`<div class="col-6"><textarea class="form-control" rows="4" required>${SOP_IMAGE_ILL}</textarea></div>`);
+            var deleteBtn = $('<div class="col my-auto"><button type="button" class="btn btn-danger text-nowrap">刪除圖片</button></div>').on('click', function () {
+                // if ($('#SOPModal').find('.sopImage').length == 1) {
+
+                // } else {
+                //     $(this).closest('.sopImage').remove();
+                // }
+                $(this).closest('.sopImage').remove();
+            });
+            imageArea.append(deleteBtn);
+
+            return imageArea;
+        }
+
+        getSOP(item3Id).then((data) => {
+            let SOP_ID = data.sop_id;
+            $("#SOPModal").data('sop', SOP_ID);
+            $("#SOPModal").find('#sopText').append(generateDesTA(data));
+            if (data.sopImages !== undefined) {
+                data.sopImages.forEach((element) => {
+                    $("#SOPModal").find('#sopImages').append(generateImageArea(element));
+                });
+            } else {
+                $("#SOPModal").find('#sopImages').append(generateImageArea());
+            }
+
+        });
+
+        $('#sopAddImageBtn').click(function (e) {
+            $("#SOPModal").find('#sopImages').append(generateImageArea());
+        });
+    }
+
+    function saveSOP() {
+        var sopJson = {
+            item_3_id: $("#SOPModal").data('item'),
+            sop_id: $("#SOPModal").data('sop'),
+            sop_text: $("#sopText textarea").val(),
+            sopImages: [
+            ]
+        }
+
+        $("#sopImages .sopImage").each(function () {
+            var imageURL = $(this).find("img").attr("src");
+            var imageID = $(this).find("img").data("id");
+            var imgIllustrate = $(this).find("textarea").val();
+
+            sopJson.sopImages.push({
+                sop_img_id: imageID,
+                img_src: imageURL,
+                img_illustrate: imgIllustrate
+            });
+        });
+
+        console.log(JSON.stringify(sopJson, null, 2));
+    }
+
+    function saveLevels(item2Id) {
+        var jsonData = {
+            // "levels": {
+            //     "level1_Id": level1_Id,
+            //     "child": {
+            //         "level2_Id": level2_Id,
+            //         "children": []
+            //     }
+            // }
+            "items": [
+            ]
+        };
+
+        $('.card').each(function () {
+            var item3Obj = {
+                "item_3_id": $(this).find('.card-header input[type="text"]').attr('data-item'),
+                "item_3_name": $(this).find('.card-header input[type="text"]').val().trim(),
+                "children": []
+            };
+            $(this).find('.detailContent').each(function () {
+                let commonObj = {
+                    "item_4_id": $(this).find('input:first').attr('data-tag'),
+                    "item_4_name": $(this).find('input:first').val().trim(),
+                    "mistakes": []
+                };
+
+                $(this).find('.commonInput input').each(function () {
+                    commonObj.mistakes.push({
+                        mistake_id: $(this).data('misid'),
+                        mistake_name: $(this).val()
+                    });
+                });
+
+                item3Obj.children.push(commonObj);
+            });
+
+            jsonData.items.push(item3Obj);
+        });
+
+        console.log(JSON.stringify(jsonData, null, 2));
+    }
+</script>

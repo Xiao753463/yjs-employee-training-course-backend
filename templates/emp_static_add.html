@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderDepartment();
+            renderPosition();
+        });
+        function postData() {
+            // 获取用户输入的数据
+            const emp_code = document.getElementById('Emp_Code').value;
+            const department_name=document.getElementById('Department').value;
+            const position=document.getElementById('Position').value;
+            const emp_name=document.getElementById('Name').value;
+            const gender=document.querySelector('input[name="Gender"]:checked').value;
+            const birth=document.getElementById('Brithday').value;
+            const address=document.getElementById('City').value+document.getElementById('Address').value;
+            const phone=document.getElementById('Phone').value;
+            const mobile=document.getElementById('Mobile').value;
+            const account_enabled = document.getElementById('Enabled').checked;
+            const email=document.getElementById('Email').value;
+           
+            // 构造要发送的数据对象
+            const data = {
+                Emp_Code:emp_code,
+                Department_Name:department_name,
+                Position:position,
+                Emp_Name:emp_name,
+                Gender:gender,
+                Address:address,
+                Birth:birth,
+                Address:address,
+                Phone:phone,
+                Mobile:mobile,
+                Account_Enabled:account_enabled,
+                Email:email,
+            };
+            console.log(data);
+            // 发送 POST 请求
+            fetch('http://your-api-url.com/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+               
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('員工基本資料儲存完成');
+                console.log('API 响应:', data);
+                // 在这里处理 API 的响应
+            })
+            .catch(error => {
+                alert('員工基本資料儲存失敗');
+                console.error('发生错误:', error);
+                // 在这里处理错误
+            });
+        }
+        function postEmpDynamic(){
+            // Get values from the form elements
+            const emp_code = localStorage.getItem('emp_code');
+            const capability = document.querySelector('input[name="Capability"]:checked').value;
+            const performance = document.querySelector('input[name="Performance"]:checked').value;
+            const attitude = document.querySelector('input[name="Attitude"]:checked').value;
+            const work_quality=document.querySelector('input[name="Work_Quality"]:checked').value;
+            const output_quality=document.querySelector('input[name="Output_Quality"]:checked').value;
+            const lean=document.querySelector('input[name="Lean"]:checked').value;
+            const efficiency=document.querySelector('input[name="Efficiency"]:checked').value;
+            const hygiene=document.querySelector('input[name="Hygiene"]:checked').value;
+            // Construct the data object
+            const data = {
+                emp_code: emp_code,
+                capability: capability,
+                performance: performance,
+                attitude: attitude,
+                work_quality: work_quality,
+                output_quality:  output_quality,
+                lean: lean,
+                efficiency: efficiency,
+                hygiene: hygiene
+            };
+            console.log(data);
+        
+            // Send the data to the API endpoint
+            fetch('http://your-api-url.com/api/empDynamic', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('員工動態屬性儲存完成');
+                console.log('Data posted successfully:', data);
+                // Handle successful response
+            })
+            .catch(error => {
+                alert('員工動態屬性儲存失敗');
+                console.error('Error posting data:', error);
+                // Handle error
+            });
+        }
+        function postPositionHistory() {
+            // 获取用户输入的数据
+            const history_position=document.getElementById('history_position').value;
+            const history_position_start=document.getElementById('position_start').value;
+            const history_position_end=document.getElementById('position_end').value;
+            const history_salary=document.getElementById('history_salary').value;
+            // 构造要发送的数据对象
+            const data = {
+                emp_code:document.getElementById('Emp_Code').value,
+                history_position:history_position,
+                history_position_start:history_position_start,
+                history_position_end:history_position_end,
+                history_salary:history_salary,
+            };
+            console.log(data);
+            // 发送 POST 请求
+            fetch('http://your-api-url.com/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API 响应:', data);
+                // 在这里处理 API 的响应
+            })
+            .catch(error => {
+                console.error('发生错误:', error);
+                // 在这里处理错误
+            });
+        }
+        function postFunctionalLevel() {
+            // 获取用户输入的数据
+            const functionallevel_date=document.getElementById('FunctionalLevel_Date').value;
+            const educationtrain=document.getElementById('EducationTrain').value;
+            const functionalassessment = document.getElementById('FunctionalAssessment');
+            let selectedValue = '';           
+            // 构造要发送的数据对象
+            const data = {
+                Functional_Level_Date:functional_level_date,
+                EducationTrain:educationtrain,
+                FunctionalAssessment:functionalassessment,
+            };
+            // 发送 POST 请求
+            fetch('http://your-api-url.com/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API 响应:', data);
+                // 在这里处理 API 的响应
+            })
+            .catch(error => {
+                console.error('发生错误:', error);
+                // 在这里处理错误
+            });
+        }
+        function deletePositionHistory() {
+           // 获取用户输入的数据
+           const history_position=document.getElementById('history_position').value;
+           const history_position_start=document.getElementById('position_start').value;
+           const history_position_end=document.getElementById('position_end').value;
+           const history_salary=document.getElementById('history_salary').value;
+           // 构造要发送的数据对象
+           const data = {
+               emp_code:document.getElementById('Emp_Code').value,
+               history_position:history_position,
+               history_position_start:history_position_start,
+               history_position_end:history_position_end,
+               history_salary:history_salary,
+           };
+            console.log("已刪除"+data);
+            // 发送 DELETE 请求
+            fetch('http://your-api-url.com/api/data/', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API 响应:', data);
+                // 在这里处理 API 的响应，比如更新界面等操作
+            })
+            .catch(error => {
+                console.error('发生错误:', error);
+                // 在这里处理错误
+            });
+        }
+        function deleteFunctionalLevel() {
+            // 获取要删除的数据的唯一标识符，比如数据的ID
+            const positionId = document.getElementById('FunctionalLevelID').value;
+            // 构造要发送的数据对象
+            const data = {
+                FunctionalLevelID: FunctionalLevelID
+            };
+        
+            // 发送 DELETE 请求
+            fetch('http://your-api-url.com/api/data/' + FunctionalLevelID, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('API 响应:', data);
+                // 在这里处理 API 的响应，比如更新界面等操作
+            })
+            .catch(error => {
+                console.error('发生错误:', error);
+                // 在这里处理错误
+            });
+        }
+        function postEmp_Dynamic() {
+            // Get values from the form elements
+            const capability = document.querySelector('input[name="Capability"]:checked').value;
+            const performance = document.querySelector('input[name="Performance"]:checked').value;
+            const attitude = document.querySelector('input[name="Attitude"]:checked').value;
+            const work_quality=document.querySelector('input[name="WorkQuality"]:checked').value;
+            const production_quality=document.querySelector('input[name="ProductionQuality"]:checked').value;
+            const lean=document.querySelector('input[name="Lean"]:checked').value;
+            const efficiency=document.querySelector('input[name="Efficiency"]:checked').value;
+            const hygiene=document.querySelector('input[name="Hygiene"]:checked').value;
+            // Construct the data object
+            const data = {
+                capability: capability,
+                performance: performance,
+                attitude: attitude,
+                work_quality: work_quality,
+                production_quality: production_quality,
+                lean: lean,
+                efficiency: efficiency,
+                hygiene: hygiene
+            };
+        
+            // Send the data to the API endpoint
+            fetch('http://your-api-url.com/api/empDynamic', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Data posted successfully:', data);
+                // Handle successful response
+            })
+            .catch(error => {
+                console.error('Error posting data:', error);
+                // Handle error
+            });
+        }
+        
+       
+        //取得職務資訊
+        function renderPosition() {
+            //取得職務資訊
+            
+            const positions = [
+            { name: "經理" },
+            { name: "廠長" },
+            { name: "生管課長" },
+            { name: "生管員" },
+            { name: "工讀生" },
+            { name: "建教生" },
+            { name: "作業員" },
+            { name: "櫃長" },
+            { name: "銷售員" },
+            { name: "課長" },
+            { name: "組長/副廠長" },
+            { name: "組長" },
+            { name: "專員" },
+            { name: "副課長" },
+            { name: "副組長" },
+            { name: "副班長" },
+            { name: "副股長" },
+            { name: "副店長" },
+            { name: "班長" },
+            { name: "指導員" },
+            { name: "股長" },
+            { name: "店長" },
+            { name: "事務員" },
+            { name: "技術員" },
+            { name: "助理銷售員" },
+            { name: "助理管理師" },
+            { name: "助理員" },
+            { name: "助理技術員" },
+            { name: "工程師" }
+        ];
+        const selectElement = document.getElementById('Position');
+        positions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.textContent = item.name;
+            selectElement.appendChild(option);
+        });
+        const  history_positionSelect = document.getElementById('history_position');
+        positions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            option.textContent = item.name;
+            history_positionSelect.appendChild(option);
+        });
+
+        }
+
+        function renderLastUpdateTime() {
+            // Get the current date and time
+            const now = new Date();
+            // Format the date and time
+            const formattedDate = now.toLocaleString();
+            // Render the formatted date and time to the page
+            document.getElementById('last_update_time').textContent = `最後更新時間: ${formattedDate}`;
+        }
+        // Call the function when the page is loaded
+        renderLastUpdateTime();
+        function renderDepartment() {
+             //取得部門資訊
+            fetch('http://your-api-url.com/api/departments')
+            .then(response => response.json())
+            .then(data => {
+                // Select the select element
+                const selectElement = document.getElementById('Department');
+                // Loop through the retrieved data
+                data.forEach(item => {
+                    // Create option element for each item
+                    const option = document.createElement('option');
+                    option.value = item.id; // Assuming 'id' and 'name' are properties in your data
+                    option.textContent = item.name;
+
+                    // Append the option to the select element
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+           const  departments = [
+           { name: "營業部（部本部：經營管理）", code: null },
+           { name: "管理部", code: 1500000 },
+           { name: "生產部", code: null },
+           { name: "財務部", code: 1700000 },
+           { name: "總經理室", code: 1100000 }
+            ];
+         const selectElement = document.getElementById('Department');
+            departments.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.code;
+                option.textContent = item.name;
+                selectElement.appendChild(option)});
+       
+        }
+
+        function generateFakeEmpData() {
+            let fakeData = [];
+        
+            for (let i = 0; i < 1; i++) { // Generate 1 set of fake data
+                let emp_code = localStorage.getItem('emp_id');
+                let department_name = generateDepartmentName();
+                let position = generatePosition();
+                let emp_name = generateName();
+                let gender = generateGender();
+                let birth = generateBirth();
+                let address = generateAddress();
+                let phone = generatePhoneNumber();
+                let mobilephone = generatePhoneNumber();
+                let account_enabled = generateAccountStatus();
+                let email = generateEmail();
+        
+                fakeData.push({
+                    emp_code: emp_code,
+                    department_name: department_name,
+                    position: position,
+                    emp_name: emp_name,
+                    gender: gender,
+                    birth: birth,
+                    address: address,
+                    phone: phone,
+                    mobilephone: mobilephone,
+                    account_enabled: account_enabled,
+                    email: email
+                });
+            }
+        
+            console.log(fakeData);
+        
+            // Render the fake data to the page
+            document.getElementById('Emp_Code').value = fakeData[0].emp_code;
+            const departmentSelect = document.getElementById('Department');
+            // Loop through options to find the one with the matching value
+            for (let i = 0; i < departmentSelect.options.length; i++) {
+                if (departmentSelect.options[i].text === fakeData[0].department_name) {
+                    departmentSelect.options[i].selected = true;
+                    break; // Once we find the matching option, we can stop the loop
+                }
+            }
+            const positionSelect = document.getElementById('Position');
+            // Loop through options to find the one with the matching value
+            for (let i = 0; i < positionSelect.options.length; i++) {
+                if (positionSelect.options[i].text === fakeData[0].position) {
+                    positionSelect.options[i].selected = true;
+                    break; // Once we find the matching option, we can stop the loop
+                }
+            }
+            document.getElementById('Name').value = fakeData[0].emp_name;
+        
+            // Gender radio buttons
+            const genderRadios = document.getElementsByName('Gender');
+            if (fakeData[0].gender === "Male") {
+                genderRadios[0].checked = true;
+            } else {
+                genderRadios[1].checked = true;
+            }
+        
+            document.getElementById('Address').value = fakeData[0].address;
+            document.getElementById('Brithday').value = fakeData[0].birth;
+            document.getElementById('Phone').value = fakeData[0].phone;
+            document.getElementById('Mobile').value = fakeData[0].mobilephone;
+        
+            // Account Enabled checkbox
+            document.getElementById('Enabled').checked = fakeData[0].account_enabled;
+        
+            document.getElementById('Email').value = fakeData[0].email;
+        }
+        
+        // 生成假資料的輔助函數，您可以根據需要自行修改或擴充
+        
+        function generateEmpCode() {
+            return Math.floor(Math.random() * 10000) + 1000;
+        }
+        
+        function generateDepartmentName() {
+            let departmentNames = ["營業部（部本部：經營管理）", "管理部", "生產部", "財務部", "總經理室"];
+            return departmentNames[Math.floor(Math.random() * departmentNames.length)];
+        }
+        
+        function generateDepartment() {
+            return Math.floor(Math.random() * 2000000) + 1000000;
+        }
+        
+        function generatePosition() {
+            let positions = ["經理", "工程師", "助理員", "店長", "組長", "事務員"];
+            return positions[Math.floor(Math.random() * positions.length)];
+        }
+        
+        function generateName() {
+            let firstNames = ["張", "王", "陳", "林", "李"];
+            let lastNames = ["小明", "小華", "小美", "小強", "小雨"];
+            return firstNames[Math.floor(Math.random() * firstNames.length)] + lastNames[Math.floor(Math.random() * lastNames.length)];
+        }
+        
+        function generateGender() {
+            let genders = ["男", "女"];
+            return genders[Math.floor(Math.random() * genders.length)];
+        }
+        
+        function generateBirth() {
+            let year = Math.floor(Math.random() * (2000 - 1970 + 1)) + 1970;
+            let month = Math.floor(Math.random() * 12) + 1;
+            let day = Math.floor(Math.random() * 28) + 1; // 簡單處理，不考慮閏年
+            return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+        }
+        
+        function generateAddress() {
+            let cities = ["台北市", "新北市", "桃園市", "台中市", "台南市"];
+            let streets = ["中正路", "中山路", "民生路", "光復路", "和平路"];
+            return cities[Math.floor(Math.random() * cities.length)] + streets[Math.floor(Math.random() * streets.length)] + Math.floor(Math.random() * 100) + "號";
+        }
+        
+        function generatePhoneNumber() {
+            let phoneNumber = "09";
+            for (let i = 0; i < 8; i++) {
+                phoneNumber += Math.floor(Math.random() * 10);
+            }
+            return phoneNumber;
+        }
+        
+        function generateAccountStatus() {
+            return Math.random() < 0.5 ? true : false;
+        }
+        
+        function generateEmail() {
+            let providers = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com", "icloud.com"];
+            let name = generateName().toLowerCase().replace(" ", "");
+            return name + "@" + providers[Math.floor(Math.random() * providers.length)];
+        }
+        function generateFakePositionHistory(){
+            // Generate fake data
+            const fakeData = {
+                emp_code:101,
+                history_position:"經理",
+                history_position_start: '2018-01-01',
+                history_position_end: '2020-12-31',
+                history_salary: 60000,
+            }
+            console.log(fakeData);
+           // Render the fake data to the page
+            document.getElementById("position_start").value = fakeData.history_position_start;
+            document.getElementById("position_end").value = fakeData.history_position_end;
+            const pastPositionSelect = document.getElementById('history_position')
+            // Loop through options to find the one with the matching value
+            for (let i = 0; i < pastPositionSelect.options.length; i++) {
+                if (pastPositionSelect.options[i].text === fakeData.history_position) {
+                    pastPositionSelect.options[i].selected = true;
+                    break; // Once we find the matching option, we can stop the loop
+                }
+            }
+            document.getElementById('history_salary').value = fakeData.history_salary;
+           
+        }
+        function generateFakeEmpDynamic(){
+            // Generate fake data
+            const fakeData = {
+                capability: randomLevel(),
+                performance: randomLevel (),
+                attitude: randomLevel(),
+                work_quality: randomLevel(),
+                production_quality: randomLevel(),
+                lean:randomLevel (),
+                efficiency: randomLevel(),
+                hygiene: randomLevel (),
+            }
+            console.log(fakeData);
+            // Render the fake data to the page
+            const capabilityRadios = document.getElementsByName('Capability');
+            capabilityRadios[fakeData.capability - 1].checked = true;
+            const performanceRadios = document.getElementsByName('Performance');
+            performanceRadios[fakeData.performance - 1].checked = true;
+            const attitudeRadios = document.getElementsByName('Attitude');
+            attitudeRadios[fakeData.attitude - 1].checked = true;
+            const workQualityRadios = document.getElementsByName('Work_Quality');
+            workQualityRadios[fakeData.work_quality - 1].checked = true;
+            const productionQualityRadios = document.getElementsByName('Output_Quality');
+            productionQualityRadios[fakeData.production_quality - 1].checked = true;
+            const leanRadios = document.getElementsByName('Lean');
+            leanRadios[fakeData.lean - 1].checked = true;
+            const efficiencyRadios = document.getElementsByName('Efficiency');
+            efficiencyRadios[fakeData.efficiency - 1].checked = true;
+            const hygieneRadios = document.getElementsByName('Hygiene');
+            hygieneRadios[fakeData.hygiene - 1].checked = true;
+        }
+    function randomLevel(){
+        let random = Math.floor(Math.random() * 5) + 1;
+        return random;
+    }
+    </script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+            <!-- <div class="col-10"
+                style="box-shadow: 5px 0px 5px #ccc;">
+                <div class="row mt-3"> -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                            <li class="breadcrumb-item"><a href="emp_auth_index">人員與權限管理</a></li>
+                            <li class="breadcrumb-item"><a href="emp_index">人員管理</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">員工基本資料</li>
+                        </ol>
+                    </nav>
+                </div>
+                 <!-- breadcrumb end -->
+                 <!-- title start -->
+                <div class="row">
+                    <div class="col">
+                        <h3 style="display: inline;">員工資本資料-新增員工</h3>
+                    </div>
+                    <!-- last_update_time -->
+                    <div class="col align-self-end">
+                        <!-- 更新時間 -->
+                        <p class="text-end" id="last_update_time">最後更新時間:2024/1/8 12:18:18</p>
+                    </div>
+                </div>
+                <!-- title end -->
+                <!-- 資料表生成開始 -->
+                <div class="row mx-1 my-1 border rounded">
+                    <!-- 基本資料 -->
+                    <div class="row g-1">
+                        <div class="col-auto me-auto ms-2">
+                            <p class="text-start" style="color: gray;">基本資料</p>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                員工動態屬性
+                            </button>  
+                            <button type="button" class="btn btn-warning" onclick="postData()">儲存</button>    
+                        </div>
+                    </div>
+                    <div class="row g-0">
+                         <!-- 員工編號 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="Emp_Code" class="col-form-label" style="font-size: 1.2rem;">員工編號：</label>
+                                </div>
+                                <div class="col-7">
+                                    <input type="text" id="Emp_Code" class="form-control h-100" placeholder="員工編號" aria-label="員工編號">
+                                </div>
+                            </div>
+                        </div>
+                         <!--部門-->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="Department" class="col-form-label" style="font-size: 1.2rem;">部門：</label>
+                                </div>
+                                <div class="col-7">
+                                    <select class="form-select h-100 " id="Department" aria-label="Default select example">
+                                        <option selected>部門</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--職務-->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="Position"  class="col-form-label" style="font-size: 1.2rem; ">職務：</label>
+                                </div>
+                                <div class="col-7">
+                                    <select class="form-select" id="Position" aria-label="Default select example">
+                                        <option selected>職務</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="row g-1">
+                         <!-- 姓名 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2" >
+                                    <label for="Name" class="col-form-label" style="font-size: 1.2rem;" >姓名：</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="text" class="form-control h-100" id="Name" placeholder="姓名" aria-label="姓名">
+                                </div>
+                            </div>
+                        </div>
+                        <!--性別 -->
+                        <div class="col">
+                            <label class="col-form-label" style="font-size: 1.2rem"; for="Gender">性別：</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="Male" value="Male">
+                                <label class="form-check-label" for="male">男</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="Female" value="Female">
+                                <label class="form-check-label" for="Female">女</label>
+                            </div>
+                        </div>
+                        <!--生日 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto">
+                                    <label for="start" class="col-form-label"  style="font-size: 1.2rem">生日：</label>        
+                                </div>
+                                <div class="col-7">
+                                    <input type="date" class="form-control" id="Brithday" name="Brithday">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 地址列 -->
+                    <div class="row mt-2">
+                        <div class="col ms-0 d-flex justify-content-start align-items-start">
+                            <label for="Adress" class="col-form-label me-2" style="font-size: 1.2rem">地址：</label>
+                            <input type="text"  class="form-control w-25" id="City" placeholder="縣市">
+                            <input type="text" class="form-control w-25" id="Address" placeholder="其他">
+                        </div>                                                    
+                    </div>
+                    <!-- 電話列 -->
+                    <div class="row g-1 md-3">
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="Phone" class="col-form-label" style="font-size: 1.2rem">電話：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Phone" placeholder="電話">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 行動電話 -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto mx-2">
+                                    <label for="Mobile" class="col-form-label" style="font-size: 1.2rem">行動電話：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Mobile" placeholder="行動電話" >
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 啟用 -->
+                        <div class="col ">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="Enabled">
+                                <label class="form-check-label" for="Enabled" style="font-size: 1.2rem">啟用</label>
+                            </div>
+                        </div>
+                    <div class="row mt-2">
+                        <!-- email -->
+                        <div class="col">
+                            <div class="row g-0">
+                                <div class="col-auto ">
+                                    <label for="Email" class="col-form-label" style="font-size: 1.2rem">E-mail：</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" id="Email" placeholder="E-mail" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">註：預設密碼為員工之生日，格式為YYYYMMDD（共8碼）</div>
+                    </div>
+                        <hr>
+                    </div>
+                     <!-- 職務歷程 -->
+                    <div class="row">
+                        <div class="row">
+                            <p class="text-start" style="color: gray;">職務歷程</p>
+                        </div>
+                        <div class="row g-0">
+                            <!-- 日期 -->
+                            <div class="col-2 ms-3">
+                                <div class="row g-0">
+                                    <div class="col-2 me-2">
+                                        <label for="position_start" class="col-form-label"  style="font-size: 1.2rem">起：</label>        
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" id="position_start" name="history_position_start">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto" >
+                                <div class="row g-0">
+                                    <div class="col-2 me-2">
+                                        <label for="position_end" class="col-form-label"  style="font-size: 1.2rem">迄：</label>        
+                                    </div>
+                                    <div class=col-8>
+                                        <input type="date" class="form-control" id="position_end" name="position_end" >
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 職務 -->
+                            <div class="col-2">
+                                <div class="row g-0 ">
+                                    <div class="col-auto">
+                                        <label for="history_position" class="col-form-label" style="font-size: 1.2rem">職務：</label>
+                                    </div>
+                                    <div class="col-8 ">
+                                        <select class="form-select" id="history_position" aria-label="Default select example">                                            
+                                            <option selected>職務</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 薪資 -->
+                            <div class="col-auto">
+                                <div class="row g-0 ms-3">
+                                    <div class="col-auto">
+                                        <label for="history_salary" class="col-form-label" style="font-size: 1.2rem" >薪資：</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" id="history_salary" aria-label="Dollar amount (with dot and two decimal places)">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div  class="col d-flex justify-content-end mb-3 ">
+                                <button type="button" class="btn btn-primary" onclick="postPositionHistory()">新增</button>
+                                <button type="button" class="btn btn-danger" onclick="deletePositionHistory()">刪除</button>       
+                            </div>
+                            <hr>
+                        </div>   
+                    </div>
+                    <!-- 職能等級 -->
+                    <div class="row ">
+                        <div class="row">
+                            <p class="text-start" style="color: gray;">職能等級</p>
+                        </div>
+                        <div class="row g-0">
+                             <!-- 日期 -->
+                            <div class="col-auto ms-3">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="Functional_Level_DateLevel_Date" class="col-form-label"  style="font-size: 1.2rem">日期：</label>        
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="date" class="form-control" id="FunctionalLevel_Date" name="FunctionalLevel_Date">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 技術項目-->
+                            <div class="col-auto ">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="EducationTrain"  class="col-form-label me-2" style="font-size: 1.2rem">技術項目：</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="text" class="form-control " placeholder="課程一" id="EducationTrain" aria-label="教育訓練">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 職能評量 -->
+                            <div class="col-auto">
+                                <div class="row g-0">
+                                    <div class="col-auto">
+                                        <label for="FunctionalAssessment" class="col-form-label me-2" style="font-size: 1.2rem">職能等級：</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" id="FunctionalAssessment" aria-label="職能評量">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col d-flex justify-content-end mb-2">
+                                <button type="button" class="btn btn-primary" onclick="postFuctionalLevel()">新增</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteFuctionalLevel()">刪除</button>       
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- main code end -->
+        </div> 
+    </div>
+    <!-- 員工動態屬性modle -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="EmpDynamic">員工動態屬性</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             <div class="container-fluid">
+                <!-- 能力 -->
+                <div class="row mb-0">
+                    <div class="col-auto">
+                        <label for="Capability" class="col-form-label" style="font-size: 1.1rem;">工作能力：</label>
+                        <label for="Capability_strengthen" class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Capability" id="Capability1" value="1">
+                            <label class="form-check-label" for="Capability">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Capability" id="Capability2" value="2">
+                            <label class="form-check-label" for="Capability">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Capability" id="Capability3" value="3">
+                            <label class="form-check-label" for="Capability">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Capability" id="Capability4" value="4">
+                            <label class="form-check-label" for="Capability">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Capability" id="Capability5" value="5">
+                            <label class="form-check-label" for="Capability">5</label>
+                        </div>
+                        <label for="Capability_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                 <!-- 績效 -->
+                <div class="row mb-0">
+                    <div class="col">
+                        <label for="Performance"  class="col-form-label" style="font-size: 1.1rem;">績效：</label>
+                        <label for="Performance_Level_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Performance" id="PerformanceLevel_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Performance_Level_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                <!-- 態度 -->
+                <div class="row mb-0">
+                    <div class="col">
+                        <label for="Attitude"  class="col-form-label" style="font-size: 1.1rem;">態度：</label>
+                        <label for="Attitude_Level_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Attitude" id="AttitudeLevel_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Attitude_Level_Excellent" class="col-form-label">優良</label>
+                    </div>                    
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h5>工作成效</h5>
+                    </div>
+                </div>
+                <!-- 工作品質 -->
+                <div class="row">
+                    <div class="col">
+                        <label for="Work_Quality"  class="col-form-label" style="font-size: 1.1rem;">工作品質：</label>
+                        <label for="Work_Quality_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Work_Quality" id="Work_QualityLevel_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Work_Quality_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                <!-- 產出品質 -->
+                <div class="row">
+                    <div class="col">
+                        <label for="Output_Quality"  class="col-form-label" style="font-size: 1.1rem;">產出品質：</label>
+                        <label for="Output_Quality_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_3" value="Level_3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_4" value="Level_4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Output_Quality" id="Output_QualityLevel_5" value="Level_5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Output_Quality_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                <!-- 精實 -->
+                <div class="row">
+                    <div class="col">
+                        <label for="Lean"  class="col-form-label" style="font-size: 1.1rem;">精實：</label>
+                        <label for="Lean_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Lean" id="LeanLevel_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Lean_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                <!-- 效率 -->
+                <div class="row">
+                    <div class="col ">
+                        <label for="Efficiency"  class="col-form-label" style="font-size: 1.1rem;">效率：</label>
+                        <label for="Efficiency_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Efficiency" id="Efficiency_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Efficiency_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+                <!-- 衛生 -->
+                <div class="row">
+                    <div class="col">
+                        <label for="Hygiene"  class="col-form-label" style="font-size: 1.1rem;">清潔衛生：</label>
+                        <label for="Hygiene_strengthen"  class="col-form-label">待加強</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_1" value="1">
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                          </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_2" value="2">
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_3" value="3">
+                            <label class="form-check-label" for="inlineRadio2">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_4" value="4">
+                            <label class="form-check-label" for="inlineRadio2">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Hygiene" id="Hygiene_5" value="5">
+                            <label class="form-check-label" for="inlineRadio2">5</label>
+                        </div>
+                        <label for="Hygiene_Excellent" class="col-form-label">優良</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+              <button type="button" class="btn btn-primary" onclick="postEmpDynamic()">儲存</button>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+
+</html>

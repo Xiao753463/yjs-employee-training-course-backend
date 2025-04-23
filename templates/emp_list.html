@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/76728a2328.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+        const fakeData ={
+            total: 20,
+            data: [
+            {
+                "emp_code": 101,
+                "emp_name": "John Smith",
+                "email": "john.smith@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-06T10:00:00"
+            },
+            {
+                "emp_code": 102,
+                "emp_name": "Jane Doe",
+                "email": "jane.doe@example.com",
+                "account_enabled": "false",
+                "Creation date": "2024-02-05T15:30:00"
+            },
+            {
+                "emp_code": 103,
+                "emp_name": "Alice Johnson",
+                "email": "alice.johnson@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-04T09:45:00"
+            },
+            {
+                "emp_code": 104,
+                "emp_name": "Michael Brown",
+                "email": "michael.brown@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-07T11:20:00"
+            },
+            {
+                "emp_code": 105,
+                "emp_name": "Emily Wilson",
+                "email": "emily.wilson@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-08T08:15:00"
+            },
+            {
+                "emp_code": 106,
+                "emp_name": "David Lee",
+                "email": "david.lee@example.com",
+                "account_enabled": "false",
+                "Creation date": "2024-02-09T14:50:00"
+            },
+            {
+                "emp_code": 107,
+                "emp_name": "Sophia Martinez",
+                "email": "sophia.martinez@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-10T09:30:00"
+            },
+            {
+                "emp_code": 108,
+                "emp_name": "James Taylor",
+                "email": "james.taylor@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-11T13:45:00"
+            },
+            {
+                "emp_code": 109,
+                "emp_name": "Olivia Johnson",
+                "email": "olivia.johnson@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-12T10:20:00"
+            },
+            {
+                "emp_code": 110,
+                "emp_name": "Daniel Wilson",
+                "email": "daniel.wilson@example.com",
+                "account_enabled": "false",
+                "Creation date": "2024-02-13T11:10:00"
+            },
+            {
+                "emp_code": 111,
+                "emp_name": "Isabella Brown",
+                "email": "isabella.brown@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-14T08:30:00"
+            },
+            {
+                "emp_code": 112,
+                "emp_name": "Ethan Martinez",
+                "email": "ethan.martinez@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-15T09:55:00"
+            },
+            {
+                "emp_code": 113,
+                "emp_name": "Mia Davis",
+                "email": "mia.davis@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-16T10:40:00"
+            },
+            {
+                "emp_code": 114,
+                "emp_name": "Aiden Thomas",
+                "email": "aiden.thomas@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-17T14:20:00"
+            },
+            {
+                "emp_code": 115,
+                "emp_name": "Amelia Garcia",
+                "email": "amelia.garcia@example.com",
+                "account_enabled": "false",
+                "Creation date": "2024-02-18T08:45:00"
+            },
+            {
+                "emp_code": 116,
+                "emp_name": "Lucas Rodriguez",
+                "email": "lucas.rodriguez@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-19T12:00:00"
+            },
+            {
+                "emp_code": 117,
+                "emp_name": "Charlotte Martinez",
+                "email": "charlotte.martinez@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-20T10:35:00"
+            },
+            {
+                "emp_code": 118,
+                "emp_name": "Alexander Smith",
+                "email": "alexander.smith@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-21T11:15:00"
+            },
+            {
+                "emp_code": 119,
+                "emp_name": "Ella Wilson",
+                "email": "ella.wilson@example.com",
+                "account_enabled": "true",
+                "Creation date": "2024-02-22T09:25:00"
+            },
+            {
+                "emp_code": 120,
+                "emp_name": "Benjamin Johnson",
+                "email": "benjamin.johnson@example.com",
+                "account_enabled": "false",
+                "Creation date": "2024-02-23T13:30:00"
+            }
+        ],
+           update_time:"2024-02-04T09:45:00",
+        }
+ 
+        var page =1;
+        var totol_pages = Math.ceil(fakeData.total/10);
+        localStorage.setItem('page',page);
+        document.addEventListener('DOMContentLoaded', function() {
+            let tableData = [];
+            for(let i=1; i<=10; i++){
+                tableData.push(fakeData.data[i*page-1]);
+            }
+            renderDataInTheTable(tableData);
+            renderTablePages(totol_pages);
+            //fetchEmpList();
+        });
+        
+        function fetchEmpList(page){
+            fetch(`/GET/api/emp_list?page=1`)
+            .then((res)=>{
+                console.log(res);
+                return res.json();
+            })
+            .then((jsonData)=>{
+                console.log(jsonData);
+                console.log(jsonData.data);
+                //renderDataInTheTable(jsonData.data)
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        }
+       
+        function renderDataInTheTable(tableData) {
+            const mytable = document.getElementById("emp_list");
+            const mytableBody = document.createElement("tbody");
+            let rowCounter = 1;
+            tableData.forEach(data => {
+                let newRow = document.createElement("tr");
+                let newRowh=document.createElement("th");
+                let checkbox = document.createElement("input");
+                checkbox.setAttribute("name", "checkbox");
+                checkbox.setAttribute("class", "form-check-input");
+                checkbox.setAttribute("type", "checkbox");
+                checkbox.setAttribute("value", "");
+                checkbox.setAttribute("id", "CheckPoint_1");
+                newRowh.appendChild(checkbox);
+                newRow.appendChild(newRowh);
+                Object.values(data).forEach((value) => {
+                    let cell = document.createElement("td");
+                    switch (value) {
+                        case "true":
+                            const checkboxInput_true_div = document.createElement('div');
+                            checkboxInput_true_div.className = 'form-check form-switch';
+                            const checkboxInput_true = document.createElement('input');
+                            checkboxInput_true.classList.add('form-check-input');
+                            checkboxInput_true.setAttribute('type', 'checkbox');
+                            checkboxInput_true.setAttribute('role', 'switch');
+                            checkboxInput_true.setAttribute('id', 'account_enabled');
+                            checkboxInput_true.addEventListener('change',function(){
+                                enableEmp();
+                            });
+                            checkboxInput_true.checked = true;
+                            checkboxInput_true_div.appendChild(checkboxInput_true);
+                            cell.appendChild(checkboxInput_true_div);
+                            newRow.appendChild(cell);
+                            break;
+                        case "false":
+                            const checkboxInput_false_div = document.createElement('div');
+                            checkboxInput_false_div.className = 'form-check form-switch';
+                            const checkboxInput_false = document.createElement('input');
+                            checkboxInput_false .classList.add('form-check-input');
+                            checkboxInput_false .setAttribute('type', 'checkbox');
+                            checkboxInput_false .setAttribute('role', 'switch');
+                            checkboxInput_false .setAttribute('id', 'account_enabled');
+                            checkboxInput_false .addEventListener('change',function(){
+                                enableEmp();
+                            });
+                            checkboxInput_false .checked = false;
+                            checkboxInput_false_div.appendChild(checkboxInput_false);
+                            cell.appendChild(checkboxInput_false_div);
+                            newRow.appendChild(cell);
+                            break;
+                        default:
+                            cell.innerText = value;
+                            newRow.appendChild(cell);
+                            break;
+                    }
+                })
+                let cell = document.createElement("td");
+                let but_1 =document.createElement("button");
+                but_1.setAttribute("id", rowCounter++);
+                but_1.addEventListener("click",function() {
+                    emp_detail(this.id);
+                });
+                but_1.setAttribute("type", "button");
+                but_1.setAttribute("class", "btn btn-secondary");
+                but_1.innerHTML = "詳細資料";
+                cell.appendChild(but_1);
+                newRow.appendChild(cell);
+                let cell_2 = document.createElement("td");
+                let link_2 =document.createElement("button");
+                link_2.addEventListener("click",function() {
+                    passEmpIdToModal(but_1.id);
+                });
+                link_2.setAttribute("type", "button");
+                link_2.setAttribute("class", "btn btn-danger");
+                link_2.setAttribute("data-bs-toggle", "modal");
+                link_2.setAttribute("data-bs-target", "#confirmEmployeeDeletion");
+                link_2.innerHTML = "刪除員工";
+                cell_2.appendChild(link_2);
+                newRow.appendChild(cell_2);
+                mytableBody.appendChild(newRow);
+            });
+            mytable.appendChild(mytableBody);
+            document.getElementById('list_info').innerText = `共${fakeData.total}筆資料，目前顯示第${localStorage.getItem("page")}頁`;
+        }
+
+        function renderTablePages(total_pages) {
+            const emp_list_pages = document.getElementById('emp_list_pages');
+            // 创建 "Previous" 链接
+            let previousLink = document.createElement('a');
+            previousLink.classList.add('page-link');
+            previousLink.style.color = 'gray';
+            previousLink.href = '#';
+            previousLink.textContent = 'Previous';
+            previousLink.onclick = function() {
+                previousPage();
+            };
+
+            let previousItem = document.createElement('li');
+            previousItem.classList.add('page-item');
+            previousItem.appendChild(previousLink);
+            emp_list_pages.appendChild(previousItem);
+
+            for (let i = 1; i <= total_pages; i++) {
+                let pageLink = document.createElement('a');
+                pageLink.classList.add('page-link');
+                pageLink.style.color = 'gray';
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                pageLink.onclick = function() {
+                    loadPage(i); // 点击链接时加载对应页面
+                };
+    
+                let pageItem = document.createElement('li');
+                pageItem.classList.add('page-item');
+                pageItem.appendChild(pageLink);
+    
+                emp_list_pages.appendChild(pageItem);
+            }
+
+            // 创建 "Next" 链接
+            let nextLink = document.createElement('a');
+            nextLink.classList.add('page-link');
+            nextLink.style.color = 'gray';
+            nextLink.href = '#';
+            nextLink.textContent = 'Previous';
+            nextLink.onclick = function() {
+                nextPage();
+            };
+
+            let nextItem = document.createElement('li');
+            nextItem.classList.add('page-item');
+            nextItem.appendChild(nextLink);
+            emp_list_pages.appendChild(nextItem);
+
+        }
+
+        function emp_detail(buttonId){
+            console.log("buttonId:", buttonId);
+            const table = document.getElementById("emp_list");
+            let Row = table.getElementsByTagName("tr")[buttonId];
+            let emp_code = Row.getElementsByTagName("td")[0].innerText;;
+            localStorage.setItem('emp_code',emp_code);
+            window.location.href = './emp_static_update';
+        }
+        function enableEmp(){
+            const checkbox = document.getElementById('account_enabled');
+            if (checkbox.checked) {
+                console.log('Checkbox is checked. Do something.');
+                fetch(`/PUT/api/emp_enable`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ emp_code: emp_code, enabled: true })
+                })
+            } else {
+                console.log('Checkbox is not checked. Do something else.');
+                // 在這裡執行其他的動作
+            }
+        }
+
+        function passEmpIdToModal(buttonId){
+            const table = document.getElementById("emp_list");
+            let Row = table.getElementsByTagName("tr")[buttonId];
+            let emp_id = Row.getElementsByTagName("td")[0].innerText;;
+            document.getElementById('delete_emp_id').innerText = emp_id;
+        }
+        function deleteEmp(){
+            let empId = document.getElementById("delete_emp_id").innerText;
+            const deleteEmployeeUrl =  `https://your-backend-server.com/deleteEmployee`;
+            const deleteRequestOptions = {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json' // Specify the content type as JSON
+                },
+                body: JSON.stringify({ empId: empIdToDelete }) // Convert the employee ID to JSON format
+            };
+                    
+            if (empId){
+                fetch(deleteEmployeeUrl, deleteRequestOptions)
+                .then(response => response.json())
+                .then(data =>{
+                    console.log('Success:', data);
+                    document.getElementById('confirmDeletion_MSG').innerText = `${empId}員工已刪除`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('confirmDeletion_MSG').innerText = `${empId}員工未刪除`;
+                });
+                }
+            else{
+                console.log("empId is not found");
+                document.getElementById('confirmDeletion_MSG').innerText = `${empId}員工未找到`;
+            }
+        }
+        function toggle(source) {
+            checkboxes = document.getElementsByName('checkbox');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+        function previousPage() {
+            let page = localStorage.getItem('page');
+            page = parseInt(page);
+            while (page>1){
+                console.log('Previous page clicked');
+                page = page - 1;
+                loadPage(page);
+                break;
+            }
+        }
+
+        function nextPage() {
+            let page = localStorage.getItem('page');
+            page = parseInt(page);
+            while (page<totol_pages){
+                console.log('Previous page clicked');
+                page = page + 1;
+                loadPage(page);
+                break;
+            }
+        }
+
+        function loadPage(pageNumber) {
+            // 加载指定页码的内容
+            let emp_list = document.getElementById('emp_list');
+            localStorage.setItem('page',pageNumber);
+            // 移除表格中的所有行
+            while (emp_list.rows.length > 1) {
+                emp_list.deleteRow(1);
+            }
+            const tableData = [];
+            for(let i=0; i<10; i++){
+                tableData.push(fakeData.data[(pageNumber-1)*10+i]);
+            }
+            renderDataInTheTable(tableData);
+            fetchEmpList(pageNumber);
+           
+        }
+        function search() {
+            // 获取用户输入的搜索关键字
+            var keyword = document.getElementById("searchInput").value;
+    
+            // 在这里，你可以使用 XMLHttpRequest 或者 Fetch API 来发送请求到后端 API
+            // 以下是一个简单的示例，你需要替换成你自己的后端 API 地址和逻辑
+            var apiUrl = "https://your-backend-api.com/search?keyword=" + encodeURIComponent(keyword);
+    
+            // 发送 GET 请求到后端 API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // 在这里处理从后端返回的搜索结果
+                    console.log("搜索结果:", data);
+                    // 可以将搜索结果展示在页面上，或者执行其他操作
+                })
+                .catch(error => {
+                    console.error("发生错误:", error);
+                });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+            <!-- <div class="col-10"
+                style="height:112vh;box-shadow: 5px 0px 5px #ccc;">
+                <div class="row  mx-2 mt-4"> -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                          <li class="breadcrumb-item"><a href="emp_auth_index">人員與權限管理</a></li>
+                          <li class="breadcrumb-item"><a href="emp_index">人員管理</a></li>
+                          <li class="breadcrumb-item active" aria-current="page">員工基本資料</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="row ms-2 ">
+                    <div class="col">
+                        <h2 style="display: inline;">員工資本資料-員工列表</h2>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col   d-flex justify-content-end align-items-end">
+                                <button type="button" class="btn btn-success text-center">範本</button>
+                                <button type="button" class="btn btn-warning mx-2" >批次匯入</button>
+                                <a href="./emp_static_add" class="btn btn-primary" role="button"  style="text-align: left;">
+                                    新增員工                          
+                                </a>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="row justify-content-end mt-3">
+                    <div class="col-2">
+                        <div class="input-group" data-mdb-input-init>
+                            <input type="search" id="searchInput" class="form-control" />
+                            <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row ms-2 mt-0">
+                    <table class="table" id="emp_list">
+                        <thead>
+                          <tr style="border-bottom: 2px solid black;">
+                            <th scope="col"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="toggle(this)"></th>
+                            <th scope="col">員工編號</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">啟用</th>
+                            <th scope="col">建立日期</th>
+                          </tr>
+                        </thead>
+                    </table>
+                <div class="row">
+                    <div class="col" >
+                        <small style="color: gray;" id="list_info">未讀取列表資訊</small>
+                    </div>
+                    <div class="col ">
+                        <div class="row">
+                            <div class="col d-flex justify-content-end align-items-end">
+                                <nav>
+                                    <ul class="pagination" id="emp_list_pages">
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary">批次啟用</button>
+                    </div>                
+                </div>
+                </div>
+            </div>
+             <!-- main code end -->
+            
+        </div> 
+    </div>
+     <!-- 確認刪除員工的對話筐 -->
+     <div class="modal fade" id="confirmEmployeeDeletion"  data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="confirmEmployeeDeletion_Title">確定要刪除員工編號：</h1>
+              <h1 class="modal-title fs-5" style="display: inline;" id="delete_emp_id"></h1>
+              <h1 class="modal-title fs-5" style="display: inline;">嗎？</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">不刪除</button>
+              <button type="button"class="btn btn-danger" onclick="deleteEmp()" data-bs-target="#confirmDeletion" data-bs-toggle="modal">刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="confirmDeletion"  data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="confirmDeletion_Title">刪除未執行</h1>
+            <h1 class="modal-title fs-5" style="display: inline;" id="confirmDeletion_MSG"></h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+             
+              <button class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+</body>
+
+</html>

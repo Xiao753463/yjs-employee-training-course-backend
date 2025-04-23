@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1b7f14eb1c.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script> 
+
+        $(function(){
+
+            $("#topbar").load("topbar"); 
+            $("#sidebar").load("sidebar");
+
+        });
+
+    </script> 
+
+</head>
+
+<body>
+    <div class="container-fluid m-0">
+
+        <!-- topbar start -->
+        <div id="topbar"></div>
+        <!-- topbar end -->
+
+        <!-- sidebar start -->
+        <div id="sidebar"></div>
+        <!-- sidebar end -->
+        
+        <!-- main code start -->
+        <div style="margin-left: 20%">
+            <div class="main" style="margin-top: 70px;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index">首頁</a></li>
+                        <li class="breadcrumb-item"><a href="competency_index">職能管理</a></li>
+                        <li class="breadcrumb-item"><a href="competency_skills">教育訓練之生產技術評量</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">實作評量</li>
+                    </ol>
+                </nav>
+                <p class="fs-2 fw-bold my-auto">實作評量</p>
+                <div class="card">
+                    <div class="card-header">
+                        <ul id="assessmentMember" class="nav nav-tabs card-header-tabs">
+                        </ul>
+                    </div>
+                    <div id="project_body" class="card-body form form-check">
+                        <h6></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main code end -->
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var currentAssessUser;
+
+    const getAssessmentList = async (requestData) => {
+        const response = await fetch(`http://localhost:3001/api/assessment/${requestData.data}/${requestData.startTime}/${requestData.endTime}`, {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    const getDetailItem = async (projectId) => {
+        const response = await fetch(`http://localhost:3001/api/exam/${projectId}`, {
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        return data;
+    };
+
+    $(document).ready(async function () {
+        function getUrlParams() {
+            var params = {};
+            window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) {
+                params[key] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        function loadProject(assId, projectId) {
+            $('#project_body').empty();
+            getDetailItem(projectId).then((data)=>{
+                let ITEM_1_NAME = data.item_1_name;
+                let ITEM_2_NAME = data.child.item_2_name;
+                let ITEM_3 = data.child.children;
+                $('#project_body').append(`<h6>${ITEM_1_NAME} > ${ITEM_2_NAME}</h6>`);
+                generateProjectCards(assId, ITEM_3);
+            });
+        }
+
+        function generateProjectCards(assId, ITEM3) {
+            ITEM3.forEach(element =>{
+                let ITEM_3_NAME = element.item_3_name;
+                let ITEM_4 = element.children;
+                var card = $('<div class="card m-2"></div>');
+                card.append(`<h5 class="card-header">${ITEM_3_NAME}</h5>`);
+                var cardBody = $('<div class="card-body"></div>');
+                var bodyOl = $('<ol class="fw-bold"></ol>');
+                ITEM_4.forEach((item4, index4)=>{
+                    let ITEM_4_ID = item4.item_4_id;
+                    let ITEM_4_NAME = item4.item_4_name;
+                    let MISTAKES = item4.mistakes;
+                    var itmeLi = $(`<li></li>`);
+                    var itmeRow = $('<div class="row"></div>')
+                    itmeRow.append(`<h6 class="col-auto">${ITEM_4_NAME}</h6>`);
+                    var levelRadio = $('<div class="col row"></div>');
+                    let cardLength = $('.card').length;
+                    for (let index = 1; index < 6; index++) {
+                        var radio = $(`<div class="form-check col-auto"><input class="form-check-input" type="radio" name="flexRadioDisabled_${cardLength}_${index4}" value="${index}" required><label class="form-check-label">${index}</label></div>`).on('click', function () {
+                            saveAssessment(assId, ITEM_4_ID, itmeLi);
+                        });
+                        levelRadio.append(radio);
+                    }
+                    itmeRow.append(levelRadio);
+                    var mistakeRow = $('<div class="m-2 row"></div>');
+                    mistakeRow.append('<h6 class="col-auto">常見缺失：</h6>');
+                    MISTAKES.forEach(element=>{
+                        let MISTAKE_ID = element.mistake_id;
+                        let MISTAKE_NAME = element.mistake_name;
+                        var checkbox = $(`<div class="form-check col-auto"><input data-misid="${MISTAKE_ID}" class="form-check-input" type="checkbox"><label class="form-check-label">${MISTAKE_NAME}</label></div>`).on('click', function(){
+                            saveAssessment(assId, ITEM_4_ID, itmeLi);
+                        });
+                        mistakeRow.append(checkbox);
+                    });
+                    itmeLi.append(itmeRow);
+                    itmeLi.append(mistakeRow);
+                    bodyOl.append(itmeLi);
+                });
+                cardBody.append(bodyOl);
+                card.append(cardBody);
+                $('#project_body').append(card);
+            });
+        }
+
+        var passedData = getUrlParams();
+        var assessmentList = await getAssessmentList(passedData);
+        assessmentList.assessments.forEach((element, index) => {
+            let ASSESSMENT_ID = element.assessment_id;
+            let ITEM_2_ID = element.item_2_id;
+            let EMP_NAME = element.emp_name;
+            let EMP_ID = element.emp_id;
+            if(index == 0){
+                loadProject(ASSESSMENT_ID, ITEM_2_ID);
+            }
+            var memebrItem = $(`<li class="nav-item"><a data-empid="${EMP_ID}" class="nav-link ${index == 0 ? "active" : ""}" aria-current="true" href="#">${EMP_NAME}</a></li>`);
+            $('#assessmentMember').append(memebrItem);
+        });
+
+        $('.nav-link').on('click', function () {
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
+            let projectId = $(this).data('project');
+            currentAssessUser = $(this).data('id');
+            loadProject(projectId);
+        });
+    });
+
+    function saveAssessment(assId, item_4_id, itemli) { 
+        var jsonData = {
+            assesment_id: assId,
+            result_id: "GEN",
+            judge_id: "GEN",
+            item_4_id: item_4_id,
+            mistake: "",
+            score: ""
+        }
+
+        let score = $(itemli).find('input[type="radio"]:checked').val();
+        jsonData.score = parseInt(score);
+
+        let mistakes = [];
+        $(itemli).find('input[type="checkbox"]:checked').each(function(index, element) {
+            let misId = $(element).data('misid');
+            mistakes.push(misId)
+        });
+        jsonData.mistake = mistakes;
+
+        console.log(jsonData);
+     }
+</script>
